@@ -12,5 +12,5 @@ public class ComplexHardware : DatabaseObject
     public string InventoryNumber { get; set; }
     public User User { get; set; }
     public ComplexHardwareType Type { get; set; }
-    public List<Hardware> Hardwares { get; set; }
+    public List<Hardware> Hardwares { get; set; } = [];
 }

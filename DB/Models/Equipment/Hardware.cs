@@ -13,5 +13,5 @@ public class Hardware : DatabaseObject
     public DateOnly DateCreate { get; set; }
 
     public ComplexHardware ComplexHardware { get; set; }
-    public List<Software> Softwares { get; set; }
+    public List<Software> Softwares { get; set; } = [];
 }
