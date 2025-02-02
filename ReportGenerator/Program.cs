@@ -6,6 +6,7 @@ using ReportModel;
 using DB.Models.Equipment;
 using DB.Models.Users;
 using DB.Models.Departments;
+using System.Data;
 
 string filePath = @"D:\DiplomDaniel\act_1.3.docx";
 string tableName = "Таблица 1. Перечень ПТС для ввода в действие";
@@ -56,11 +57,10 @@ hardware1.Softwares.Add(software);
 complex.Hardwares.Add(hardware1);
 complex.User = user;
 
-var actInfo = new Act_1_3(complex);
+var actInfo = new Act_1_3Info(complex);
 actInfo.Initialize();
 
-var report = new Act_1_3_Report(actInfo);
-
+var report = ReportFactory.CreateReport(actInfo);
 FillTableFromReports(table, report);
 
 Console.WriteLine("Введите наименование файла");
@@ -68,7 +68,6 @@ var newName = Console.ReadLine();
 
 document.SaveAs($"{Path.GetTempPath()}\\{newName}.docx");
 
-// Универсальный метод заполнения таблицы
 static void FillTableFromReports(XWPFTable table, IReport report)
 {
     if (table.NumberOfRows < 2)
@@ -76,13 +75,20 @@ static void FillTableFromReports(XWPFTable table, IReport report)
 
     int rowIndex = 4;
 
-    foreach (var dataRow in report.GetData())
+    var tablesInfo = report.GetTablesInfo();
+
+    foreach (var tableInfo in tablesInfo)
     {
-        var row = table.CreateRow();
-        row.AddNewTableCell(); // При создании строки создает на одну ячейку меньше, нада добавлять
+        int startRowIndex = tableInfo.StartIndexRow;
 
-        report.FillTableRow(row, dataRow);
+        foreach (var rowInfo in tableInfo.RowsInfo)
+        {
+            var row = table.CreateRow();
+            row.AddNewTableCell(); // При создании строки создает на одну ячейку меньше, нада добавлять
 
-        rowIndex++;
+            report.FillTableRow(row, rowInfo);
+
+            rowIndex++;
+        }
     }
 }

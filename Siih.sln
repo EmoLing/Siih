@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportGenerator", "ReportGe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportModel", "ReportModel\ReportModel.csproj", "{EE3C25FE-40AD-4C0F-9075-C4A4324825C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{C76E18EF-A6AF-4562-B970-AA6CB969A0E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,10 @@ Global
 		{EE3C25FE-40AD-4C0F-9075-C4A4324825C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE3C25FE-40AD-4C0F-9075-C4A4324825C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE3C25FE-40AD-4C0F-9075-C4A4324825C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C76E18EF-A6AF-4562-B970-AA6CB969A0E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C76E18EF-A6AF-4562-B970-AA6CB969A0E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C76E18EF-A6AF-4562-B970-AA6CB969A0E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C76E18EF-A6AF-4562-B970-AA6CB969A0E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

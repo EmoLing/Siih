@@ -1,15 +1,11 @@
 ﻿using NPOI.XWPF.UserModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ReportModel;
 
 namespace ReportGenerator.Strategy;
 
 public interface IReport
 {
-    IEnumerable<object> GetData();
+    IEnumerable<TableInfo> GetTablesInfo();
 
-    void FillTableRow(XWPFTableRow row, object data);
+    void FillTableRow(XWPFTableRow row, RowInfo rowInfo);
 }
