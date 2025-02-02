@@ -1,13 +1,17 @@
-﻿using DB.Models.Equipment;
+﻿using Common;
+using DB.Models.Equipment;
 
 namespace ReportModel.Акт_со_1._3;
 
 public class Act_1_3Table1Info(ComplexHardware complexHardware) : TableInfo
 {
     private int _startNumber = 0;
+
     protected override int StartRow => 4;
 
     public string NameComplexhardware => complexHardware.Name;
+
+    public override string TableName => TableNames.Act_1_3Table1;
 
     public void Initialize() => complexHardware.Hardwares.ForEach(hardware =>
     {

@@ -1,4 +1,4 @@
-﻿using DB.Models.Equipment;
+﻿using Common;
 
 namespace ReportModel.Акт_со_1._3;
 
@@ -6,11 +6,11 @@ public class Act_1_3Table2Info(List<Act_1_3Table2Data> data) : TableInfo
 {
     protected override int StartRow => 2;
 
-    public List<Act_1_3Table2RowInfo> Rows { get; } = [];
+    public override string TableName => TableNames.Act_1_3Table2;
 
     public void Initialize() => data.ForEach(d =>
     {
-        Rows.Add(new Act_1_3Table2RowInfo()
+        RowsInfo.Add(new Act_1_3Table2RowInfo()
         {
             Number = d.Number,
             Name = d.HardwareName,
