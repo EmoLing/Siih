@@ -1,28 +1,23 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:Siih.ViewModels"
+        xmlns:vm="using:UIClient.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="Siih.Views.MainWindow"
+        x:Class="UIClient.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Siih">
+        Title="UIClient">
 
     <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-	<Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*"/>
-		</Grid.ColumnDefinitions>
-
-		<StackPanel Grid.Column="0" >
-			<Button />
-			<Button />
-			<Button />
-			<Button />
-		</StackPanel>
-		<Grid Grid.Column="0">
-		</Grid>
-	</Grid>
+	<StackPanel>
+		
+	</StackPanel>
+	<DockPanel>
+		<ContentControl Name="ContentControl"/>
+	</DockPanel>
 </Window>

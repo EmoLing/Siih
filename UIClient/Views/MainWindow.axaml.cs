@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace Siih.Views;
+namespace UIClient.Views;
 public partial class MainWindow : Window
 {
     public MainWindow()

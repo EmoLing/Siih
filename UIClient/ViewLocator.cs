@@ -1,14 +1,18 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using Siih.ViewModels;
 using System;
+using UIClient.ViewModels;
 
-namespace Siih;
+namespace UIClient;
 public class ViewLocator : IDataTemplate
 {
-    public IControl Build(object data)
+
+    public Control? Build(object? param)
     {
-        var name = data.GetType().FullName!.Replace("ViewModel", "View");
+        if (param is null)
+            return null;
+
+        var name = param.GetType().FullName!.Replace("ViewModel", "View", StringComparison.Ordinal);
         var type = Type.GetType(name);
 
         if (type != null)
@@ -19,9 +23,8 @@ public class ViewLocator : IDataTemplate
         return new TextBlock { Text = "Not Found: " + name };
     }
 
-    public bool Match(object data)
+    public bool Match(object? data)
     {
-
         return data is ViewModelBase;
     }
 }
