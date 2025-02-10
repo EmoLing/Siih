@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Server.Controllers;
-public class UserController : Controller
+
+[Route("api/[controller]")]
+[ApiController]
+public class UsersController : Controller
 {
     private ApplicationDBContext _dbContext;
     private CancellationToken _cancellationToken;
 
-    public UserController(ApplicationDBContext dbContext)
+    public UsersController(ApplicationDBContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -19,11 +22,14 @@ public class UserController : Controller
         return View();
     }
 
-    [HttpGet(Name = nameof(GetUser))]
+    [HttpGet("{id}")]
     public async Task<User> GetUser(int id) => await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id, _cancellationToken);
 
-    [HttpGet(Name = nameof(GetUsers))]
-    public IEnumerable<User> GetUsers() => [.. _dbContext.Users];
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+    {
+        return await _dbContext.Users.ToListAsync();
+    }
 
     [HttpPost(Name = nameof(CreateUser))]
     public async Task<IActionResult> CreateUser(User user)

@@ -26,7 +26,9 @@ public class ApplicationDBContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var builder = new ConfigurationBuilder();
-        builder.SetBasePath(Directory.GetCurrentDirectory());
+
+        string currentDirectory = Directory.GetCurrentDirectory();
+        builder.SetBasePath(currentDirectory);
         builder.AddJsonFile("appsettings.json");
         var config = builder.Build();
         string connectionString = config.GetConnectionString("DefaultConnection");

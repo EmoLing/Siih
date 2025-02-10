@@ -1,6 +1,32 @@
-﻿namespace UIClient.ViewModels;
+﻿using ReactiveUI;
+using System.Reactive;
+using UIClient.Services;
 
-public partial class MainWindowViewModel : ViewModelBase
+namespace UIClient.ViewModels;
+
+public class MainWindowViewModel : ViewModelBase
 {
-    public string Greeting { get; } = "Welcome to Avalonia!";
+    private readonly ApiService _apiService;
+    private object _currentContent;
+
+    public object CurrentContent
+    {
+        get => _currentContent;
+        set => this.RaiseAndSetIfChanged(ref _currentContent, value);
+    }
+
+    public ReactiveCommand<Unit, Unit> ShowUsersCommand { get; }
+
+    public MainWindowViewModel(ApiService apiService)
+    {
+        _apiService = apiService;
+
+        ShowUsersCommand = ReactiveCommand.Create(ShowUsers);
+    }
+
+    private void ShowUsers()
+    {
+        CurrentContent = new UsersViewModel(_apiService);
+    }
+
 }

@@ -14,12 +14,10 @@
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-	
-	<TextBox Text="{Binding Greeting}"/>
-	<!--<StackPanel>
-		
-	</StackPanel>
 	<DockPanel>
-		<ContentControl Name="ContentControl"/>
-	</DockPanel>-->
+		<StackPanel DockPanel.Dock="Left" Width="200" Background="LightGray">
+			<Button Content="Пользователи" Command="{Binding ShowUsersCommand}" Margin="10"/>
+		</StackPanel>
+		<ContentControl Content="{Binding CurrentContent}" />
+	</DockPanel>
 </Window>

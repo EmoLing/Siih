@@ -9,6 +9,16 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<ApplicationDBContext>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin() // Разрешаем запросы с любого источника
+              .AllowAnyMethod() // Разрешаем все HTTP-методы
+              .AllowAnyHeader(); // Разрешаем все заголовки
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

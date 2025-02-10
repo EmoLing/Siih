@@ -24,7 +24,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportModel", "ReportModel\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{C76E18EF-A6AF-4562-B970-AA6CB969A0E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIClient", "UIClient\UIClient.csproj", "{A86AA088-BA72-43B4-97E7-3C10C01EA48A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIClient", "UIClient\UIClient.csproj", "{0EDEAA83-1212-45D8-9155-A3C67D75F1D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,10 +56,10 @@ Global
 		{C76E18EF-A6AF-4562-B970-AA6CB969A0E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C76E18EF-A6AF-4562-B970-AA6CB969A0E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C76E18EF-A6AF-4562-B970-AA6CB969A0E4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A86AA088-BA72-43B4-97E7-3C10C01EA48A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A86AA088-BA72-43B4-97E7-3C10C01EA48A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A86AA088-BA72-43B4-97E7-3C10C01EA48A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A86AA088-BA72-43B4-97E7-3C10C01EA48A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EDEAA83-1212-45D8-9155-A3C67D75F1D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EDEAA83-1212-45D8-9155-A3C67D75F1D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EDEAA83-1212-45D8-9155-A3C67D75F1D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EDEAA83-1212-45D8-9155-A3C67D75F1D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DB.Models;
+﻿namespace DB.Models;
 
 public abstract class DatabaseObject : IEquatable<DatabaseObject>
 {
@@ -17,4 +11,6 @@ public abstract class DatabaseObject : IEquatable<DatabaseObject>
     public bool Equals(DatabaseObject other) => Id == other.Id && Guid == other.Guid;
 
     public override int GetHashCode() => base.GetHashCode();
+
+    public override string ToString() => Name;
 }
