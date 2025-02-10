@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DB.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20250210063848_ChangeRelationS_H_1_n_To_n_n")]
-    partial class ChangeRelationS_H_1_n_To_n_n
+    [Migration("20250210152000_CreateDB")]
+    partial class CreateDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,31 +25,7 @@ namespace DB.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("DB.Models.Departments.Cabinet", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("DepartmentId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.ToTable("Cabinets");
-                });
-
-            modelBuilder.Entity("DB.Models.Departments.Department", b =>
+            modelBuilder.Entity("DB.Models.DatabaseObject", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,149 +41,9 @@ namespace DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Department");
-                });
+                    b.ToTable("DatabaseObject");
 
-            modelBuilder.Entity("DB.Models.Equipment.ComplexHardware", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("InventoryNumber")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ComplexesHardware");
-                });
-
-            modelBuilder.Entity("DB.Models.Equipment.Hardware", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Article")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("ComplexHardwareId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateOnly>("DateCreate")
-                        .HasColumnType("date");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SerialNumber")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ComplexHardwareId");
-
-                    b.ToTable("Hardwares");
-                });
-
-            modelBuilder.Entity("DB.Models.Equipment.Software", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Version")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Softwares");
-                });
-
-            modelBuilder.Entity("DB.Models.Users.JobTitle", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("JobTitles");
-                });
-
-            modelBuilder.Entity("DB.Models.Users.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("CabinetId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uuid");
-
-                    b.Property<int?>("JobTitleId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Surname")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CabinetId");
-
-                    b.HasIndex("JobTitleId");
-
-                    b.ToTable("Users");
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("HardwareSoftware", b =>
@@ -227,44 +63,103 @@ namespace DB.Migrations
 
             modelBuilder.Entity("DB.Models.Departments.Cabinet", b =>
                 {
-                    b.HasOne("DB.Models.Departments.Department", "Department")
-                        .WithMany("Cabinets")
-                        .HasForeignKey("DepartmentId");
+                    b.HasBaseType("DB.Models.DatabaseObject");
 
-                    b.Navigation("Department");
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("integer");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.ToTable("Cabinet", (string)null);
+                });
+
+            modelBuilder.Entity("DB.Models.Departments.Department", b =>
+                {
+                    b.HasBaseType("DB.Models.DatabaseObject");
+
+                    b.ToTable("Department", (string)null);
                 });
 
             modelBuilder.Entity("DB.Models.Equipment.ComplexHardware", b =>
                 {
-                    b.HasOne("DB.Models.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                    b.HasBaseType("DB.Models.DatabaseObject");
 
-                    b.Navigation("User");
+                    b.Property<string>("InventoryNumber")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ComplexHardware", (string)null);
                 });
 
             modelBuilder.Entity("DB.Models.Equipment.Hardware", b =>
                 {
-                    b.HasOne("DB.Models.Equipment.ComplexHardware", "ComplexHardware")
-                        .WithMany("Hardwares")
-                        .HasForeignKey("ComplexHardwareId");
+                    b.HasBaseType("DB.Models.DatabaseObject");
 
-                    b.Navigation("ComplexHardware");
+                    b.Property<string>("Article")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("ComplexHardwareId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly>("DateCreate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("SerialNumber")
+                        .HasColumnType("text");
+
+                    b.HasIndex("ComplexHardwareId");
+
+                    b.ToTable("Hardware", (string)null);
+                });
+
+            modelBuilder.Entity("DB.Models.Equipment.Software", b =>
+                {
+                    b.HasBaseType("DB.Models.DatabaseObject");
+
+                    b.Property<string>("Version")
+                        .HasColumnType("text");
+
+                    b.ToTable("Software", (string)null);
+                });
+
+            modelBuilder.Entity("DB.Models.Users.JobTitle", b =>
+                {
+                    b.HasBaseType("DB.Models.DatabaseObject");
+
+                    b.ToTable("JobTitle", (string)null);
                 });
 
             modelBuilder.Entity("DB.Models.Users.User", b =>
                 {
-                    b.HasOne("DB.Models.Departments.Cabinet", "Cabinet")
-                        .WithMany()
-                        .HasForeignKey("CabinetId");
+                    b.HasBaseType("DB.Models.DatabaseObject");
 
-                    b.HasOne("DB.Models.Users.JobTitle", "JobTitle")
-                        .WithMany()
-                        .HasForeignKey("JobTitleId");
+                    b.Property<int?>("CabinetId")
+                        .HasColumnType("integer");
 
-                    b.Navigation("Cabinet");
+                    b.Property<string>("FirstName")
+                        .HasColumnType("text");
 
-                    b.Navigation("JobTitle");
+                    b.Property<int?>("JobTitleId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Surname")
+                        .HasColumnType("text");
+
+                    b.HasIndex("CabinetId");
+
+                    b.HasIndex("JobTitleId");
+
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("HardwareSoftware", b =>
@@ -282,6 +177,99 @@ namespace DB.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DB.Models.Departments.Cabinet", b =>
+                {
+                    b.HasOne("DB.Models.Departments.Department", "Department")
+                        .WithMany("Cabinets")
+                        .HasForeignKey("DepartmentId");
+
+                    b.HasOne("DB.Models.DatabaseObject", null)
+                        .WithOne()
+                        .HasForeignKey("DB.Models.Departments.Cabinet", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("DB.Models.Departments.Department", b =>
+                {
+                    b.HasOne("DB.Models.DatabaseObject", null)
+                        .WithOne()
+                        .HasForeignKey("DB.Models.Departments.Department", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DB.Models.Equipment.ComplexHardware", b =>
+                {
+                    b.HasOne("DB.Models.DatabaseObject", null)
+                        .WithOne()
+                        .HasForeignKey("DB.Models.Equipment.ComplexHardware", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DB.Models.Users.User", "User")
+                        .WithMany("ComplexHardwares")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DB.Models.Equipment.Hardware", b =>
+                {
+                    b.HasOne("DB.Models.Equipment.ComplexHardware", "ComplexHardware")
+                        .WithMany("Hardwares")
+                        .HasForeignKey("ComplexHardwareId");
+
+                    b.HasOne("DB.Models.DatabaseObject", null)
+                        .WithOne()
+                        .HasForeignKey("DB.Models.Equipment.Hardware", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ComplexHardware");
+                });
+
+            modelBuilder.Entity("DB.Models.Equipment.Software", b =>
+                {
+                    b.HasOne("DB.Models.DatabaseObject", null)
+                        .WithOne()
+                        .HasForeignKey("DB.Models.Equipment.Software", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DB.Models.Users.JobTitle", b =>
+                {
+                    b.HasOne("DB.Models.DatabaseObject", null)
+                        .WithOne()
+                        .HasForeignKey("DB.Models.Users.JobTitle", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DB.Models.Users.User", b =>
+                {
+                    b.HasOne("DB.Models.Departments.Cabinet", "Cabinet")
+                        .WithMany()
+                        .HasForeignKey("CabinetId");
+
+                    b.HasOne("DB.Models.DatabaseObject", null)
+                        .WithOne()
+                        .HasForeignKey("DB.Models.Users.User", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DB.Models.Users.JobTitle", "JobTitle")
+                        .WithMany()
+                        .HasForeignKey("JobTitleId");
+
+                    b.Navigation("Cabinet");
+
+                    b.Navigation("JobTitle");
+                });
+
             modelBuilder.Entity("DB.Models.Departments.Department", b =>
                 {
                     b.Navigation("Cabinets");
@@ -290,6 +278,11 @@ namespace DB.Migrations
             modelBuilder.Entity("DB.Models.Equipment.ComplexHardware", b =>
                 {
                     b.Navigation("Hardwares");
+                });
+
+            modelBuilder.Entity("DB.Models.Users.User", b =>
+                {
+                    b.Navigation("ComplexHardwares");
                 });
 #pragma warning restore 612, 618
         }

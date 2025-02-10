@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DB.Models;
 
-public class DatabaseObject : IEquatable<DatabaseObject>
+public abstract class DatabaseObject : IEquatable<DatabaseObject>
 {
     public int Id { get; set; }
     public Guid Guid { get; set; }
