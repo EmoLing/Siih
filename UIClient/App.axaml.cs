@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,8 @@ namespace UIClient;
 public partial class App : Application
 {
     public IServiceProvider Services { get; private set; }
+
+    public static Window Owner => Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop ? desktop.MainWindow : null;
 
     public override void Initialize()
     {

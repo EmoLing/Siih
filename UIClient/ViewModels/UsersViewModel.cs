@@ -6,6 +6,8 @@ using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Threading.Tasks;
 using UIClient.Services;
+using UIClient.ViewModels.Dialogs;
+using UIClient.Views;
 
 namespace UIClient.ViewModels;
 
@@ -26,9 +28,9 @@ public class UsersViewModel : ViewModel
     public UsersViewModel(ApiService apiService)
         : base(apiService)
     {
-        AddUserCommand = ReactiveCommand.Create(AddUser);
+        AddUserCommand = ReactiveCommand.CreateFromTask(AddUser);
         DeleteUserCommand = ReactiveCommand.Create(DeleteUser);
-        EditUserCommand = ReactiveCommand.Create(EditUser);
+        EditUserCommand = ReactiveCommand.CreateFromTask(EditUser);
     }
 
     protected override async Task LoadDataAsync()
@@ -37,9 +39,27 @@ public class UsersViewModel : ViewModel
         Users = new ObservableCollection<User>(users);
     }
 
-    private void AddUser()
+    private async Task AddUser()
     {
-        // Логика добавления пользователя
+        var dialog = new UserEditDialog() { DataContext = new UserEditDialogViewModel(ApiService) };
+
+        var result = await dialog.ShowDialog<bool>(App.Owner);
+
+        if (!result)
+            return;
+
+        var dialogData = (dialog.DataContext as UserEditDialogViewModel);
+
+        var newUser = new User()
+        {
+            FirstName = dialogData.FirstName,
+            LastName = dialogData.LastName,
+            Surname = dialogData.Surname,
+            Cabinet = dialogData.SelectedCabinet,
+            JobTitle = dialogData.SelectedJobTitle,
+        };
+
+        await ApiService.AddUserAsync(newUser);
     }
 
     private void DeleteUser()
@@ -47,8 +67,9 @@ public class UsersViewModel : ViewModel
         // Логика удаления пользователя
     }
 
-    private void EditUser()
+    private Task EditUser()
     {
+        return Task.CompletedTask;
         // Логика изменения пользователя
     }
 }

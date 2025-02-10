@@ -7,35 +7,25 @@ namespace Server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class UsersController : Controller
+public class UsersController(ApplicationDBContext dbContext) : MainController(dbContext)
 {
-    private ApplicationDBContext _dbContext;
-    private CancellationToken _cancellationToken;
-
-    public UsersController(ApplicationDBContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
-    public IActionResult Index()
-    {
-        return View();
-    }
-
     [HttpGet("{id}")]
-    public async Task<User> GetUser(int id) => await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id, _cancellationToken);
+    public async Task<User> GetUser(int id) => await DbContext.Users.FirstOrDefaultAsync(u => u.Id == id, CancellationToken);
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<User>>> GetUsers()
     {
-        return await _dbContext.Users.ToListAsync();
+        return await DbContext.Users.ToListAsync();
     }
 
-    [HttpPost(Name = nameof(CreateUser))]
-    public async Task<IActionResult> CreateUser(User user)
+    [HttpPost]
+    public async Task<IActionResult> AddUser([FromBody] User user)
     {
-        await _dbContext.Users.AddAsync(user, _cancellationToken);
-        await _dbContext.SaveChangesAsync(_cancellationToken);
+        if (user is null)
+            return BadRequest("Данные пользователя не предоставлены.");
+
+        await DbContext.Users.AddAsync(user, CancellationToken);
+        await DbContext.SaveChangesAsync(CancellationToken);
 
         return Ok(user);
     }
@@ -43,8 +33,8 @@ public class UsersController : Controller
     [HttpPatch(Name = nameof(UpdateUser))]
     public async Task<IActionResult> UpdateUser(User user)
     {
-        _dbContext.Users.Update(user);
-        await _dbContext.SaveChangesAsync(_cancellationToken);
+        DbContext.Users.Update(user);
+        await DbContext.SaveChangesAsync(CancellationToken);
 
         return Ok(user);
     }
@@ -52,13 +42,13 @@ public class UsersController : Controller
     [HttpDelete(Name = nameof(DeleteUser))]
     public async Task<IActionResult> DeleteUser(int id)
     {
-        var user = _dbContext.Users.Find(id);
+        var user = DbContext.Users.Find(id);
 
         if (user is null)
             return NotFound(id);
 
-        _dbContext.Users.Remove(user);
-        await _dbContext.SaveChangesAsync();
+        DbContext.Users.Remove(user);
+        await DbContext.SaveChangesAsync();
 
         return Ok(user);
     }
