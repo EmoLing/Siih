@@ -16,4 +16,10 @@
     <ProjectReference Include="..\ReportModel\ReportModel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="act_1.3.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

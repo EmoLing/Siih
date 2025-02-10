@@ -5,8 +5,9 @@ using NPOI.XWPF.UserModel;
 using ReportGenerator;
 using ReportGenerator.Strategy;
 using ReportModel;
+using System.Diagnostics;
 
-string filePath = @"D:\DiplomDaniel\act_1.3.docx";
+string filePath = @"act_1.3.docx";
 
 using var document = new XWPFDocument(File.OpenRead(filePath));
 
@@ -17,10 +18,12 @@ var report = ReportFactory.CreateReport(actInfo);
 FillTablesFromReport(report, document);
 
 Console.WriteLine("Введите наименование файла");
-var newName = Console.ReadLine();
+string newName = Console.ReadLine();
+string newPathFile = $"{Path.GetTempPath()}{newName}.docx";
 
-document.SaveAs($"{Path.GetTempPath()}\\{newName}.docx");
-
+document.SaveAs(newPathFile);
+Console.WriteLine($"Путь до файла: {newPathFile}");
+Process.Start("explorer.exe", $"/select, \"{newPathFile}\"");
 
 static Act_1_3Info GenerateAct1_3Data()
 {
@@ -34,7 +37,7 @@ static Act_1_3Info GenerateAct1_3Data()
     var hardware1 = new Hardware()
     {
         Name = "hardware1",
-        SerialNumber = "0012988287\r\n(410134202313173)\r\n",
+        SerialNumber = $"0012988287(410134202313173)",
         Article = "000",
         DateCreate = DateOnly.FromDateTime(DateTime.Now),
     };

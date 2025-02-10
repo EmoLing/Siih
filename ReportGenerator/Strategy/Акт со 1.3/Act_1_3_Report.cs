@@ -28,7 +28,7 @@ public class Act_1_3_Report(ReportInfo act) : Report(act)
 
     private void FillTable1RowCore(XWPFTableRow row, Act_1_3Table1RowInfo dataRow)
     {
-        row.GetCell(CellsTable1.Number).FillCellWithStyle("0", 12, ParagraphAlignment.CENTER);
+        row.GetCell(CellsTable1.Number).FillCellWithStyle(dataRow.Number.ToString(), 12, ParagraphAlignment.CENTER);
         row.GetCell(CellsTable1.Name).FillCellWithStyle(dataRow.Name, 12, ParagraphAlignment.CENTER);
         row.GetCell(CellsTable1.SerialNumber).FillCellWithStyle(dataRow.SerialNumber, 12, ParagraphAlignment.CENTER);
         row.GetCell(CellsTable1.Article).FillCellWithStyle(dataRow.Article, 12, ParagraphAlignment.CENTER);
@@ -41,33 +41,10 @@ public class Act_1_3_Report(ReportInfo act) : Report(act)
 
     private void FillTable2RowCore(XWPFTableRow row, Act_1_3Table2RowInfo dataRow)
     {
-        row.GetCell(CellsTable2.Number).FillCellWithStyle("0", 12, ParagraphAlignment.CENTER);
+        row.GetCell(CellsTable2.Number).FillCellWithStyle(dataRow.Number.ToString(), 12, ParagraphAlignment.CENTER);
         row.GetCell(CellsTable2.Name).FillCellWithStyle(dataRow.Name, 12, ParagraphAlignment.CENTER);
         row.GetCell(CellsTable2.SerialNumber).FillCellWithStyle(dataRow.SerialNumber, 12, ParagraphAlignment.CENTER);
         row.GetCell(CellsTable2.IncomingInspectionResults).FillCellWithStyle(dataRow.IncomingInspectionResults, 12, ParagraphAlignment.CENTER);
         row.GetCell(CellsTable2.FunctioningInspectionResults).FillCellWithStyle(dataRow.FunctioningInspectionResults, 12, ParagraphAlignment.CENTER);
     }
 }
-
-//    public static readonly string[] Table1ColumnsNames =
-//    {
-//        "№  п/п",
-//        "Наименование оборудования",
-//        "Серийный №\r\n(инвентарный №)\r\n",
-//        "Артикул",
-//        "Дата (год) выпуска",
-//        "Место\r\nустановки\r\n",
-//        // "Установленное ОПО",
-//        "Наименование",
-//        "Версия",
-//        "Ф.И.О. лица,         прошедшего инструктаж",
-//    };
-
-//    public static readonly string[] Table2ColumnsNames =
-//{
-//        "№ п/п из таблицы 1",
-//        "Наименование оборудования",
-//        "Серийный № (инвентарный №)\r\n",
-//        "Результаты входного контроля с описанием нарушений \r\n(состояние упаковки, результаты внешнего осмотра, комплектность)\r\n",
-//        "Результаты контроля функционирования с описанием нарушений",
-//    };
