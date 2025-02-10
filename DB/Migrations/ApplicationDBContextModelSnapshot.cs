@@ -139,9 +139,6 @@ namespace DB.Migrations
                     b.Property<Guid>("Guid")
                         .HasColumnType("uuid");
 
-                    b.Property<int?>("HardwareId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
@@ -149,8 +146,6 @@ namespace DB.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("HardwareId");
 
                     b.ToTable("Softwares");
                 });
@@ -212,6 +207,21 @@ namespace DB.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("HardwareSoftware", b =>
+                {
+                    b.Property<int>("HardwaresId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SoftwaresId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("HardwaresId", "SoftwaresId");
+
+                    b.HasIndex("SoftwaresId");
+
+                    b.ToTable("HardwareSoftware");
+                });
+
             modelBuilder.Entity("DB.Models.Departments.Cabinet", b =>
                 {
                     b.HasOne("DB.Models.Departments.Department", "Department")
@@ -239,13 +249,6 @@ namespace DB.Migrations
                     b.Navigation("ComplexHardware");
                 });
 
-            modelBuilder.Entity("DB.Models.Equipment.Software", b =>
-                {
-                    b.HasOne("DB.Models.Equipment.Hardware", null)
-                        .WithMany("Softwares")
-                        .HasForeignKey("HardwareId");
-                });
-
             modelBuilder.Entity("DB.Models.Users.User", b =>
                 {
                     b.HasOne("DB.Models.Departments.Cabinet", "Cabinet")
@@ -261,6 +264,21 @@ namespace DB.Migrations
                     b.Navigation("JobTitle");
                 });
 
+            modelBuilder.Entity("HardwareSoftware", b =>
+                {
+                    b.HasOne("DB.Models.Equipment.Hardware", null)
+                        .WithMany()
+                        .HasForeignKey("HardwaresId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DB.Models.Equipment.Software", null)
+                        .WithMany()
+                        .HasForeignKey("SoftwaresId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DB.Models.Departments.Department", b =>
                 {
                     b.Navigation("Cabinets");
@@ -269,11 +287,6 @@ namespace DB.Migrations
             modelBuilder.Entity("DB.Models.Equipment.ComplexHardware", b =>
                 {
                     b.Navigation("Hardwares");
-                });
-
-            modelBuilder.Entity("DB.Models.Equipment.Hardware", b =>
-                {
-                    b.Navigation("Softwares");
                 });
 #pragma warning restore 612, 618
         }
