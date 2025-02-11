@@ -1,6 +1,7 @@
 ﻿using ReactiveUI;
 using System.Reactive;
 using UIClient.Services;
+using UIClient.ViewModels.Equipment;
 
 namespace UIClient.ViewModels;
 
@@ -17,6 +18,8 @@ public class MainWindowViewModel : ViewModelBase
 
     public ReactiveCommand<Unit, Unit> ShowUsersCommand { get; }
     public ReactiveCommand<Unit, Unit> ShowJobTitlesCommand { get; }
+    public ReactiveCommand<Unit, Unit> ShowSoftwaresCommand { get; }
+    public ReactiveCommand<Unit, Unit> ShowHardwaresCommand { get; }
 
     public MainWindowViewModel(ApiService apiService)
     {
@@ -24,6 +27,8 @@ public class MainWindowViewModel : ViewModelBase
 
         ShowUsersCommand = ReactiveCommand.Create(ShowUsers);
         ShowJobTitlesCommand = ReactiveCommand.Create(ShowJobTitles);
+        ShowSoftwaresCommand = ReactiveCommand.Create(ShowSoftwares);
+        ShowHardwaresCommand = ReactiveCommand.Create(ShowHardwares);
     }
 
     private void ShowUsers()
@@ -36,4 +41,13 @@ public class MainWindowViewModel : ViewModelBase
         CurrentContent = new JobTitlesViewModel(_apiService);
     }
 
+    private void ShowSoftwares()
+    {
+        CurrentContent = new SoftwaresViewModel(_apiService);
+    }
+
+    private void ShowHardwares()
+    {
+        CurrentContent = new HardwaresViewModel(_apiService);
+    }
 }

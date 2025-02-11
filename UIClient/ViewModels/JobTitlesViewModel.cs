@@ -48,42 +48,33 @@ public class JobTitlesViewModel : ViewModel
         JobTitles = new ObservableCollection<JobTitle>(jobTitles);
     }
 
-    private Task AddJobTitle()
+    private async Task AddJobTitle()
     {
-        return Task.CompletedTask;
+        var dialog = new JobTitleEditDialog();
+        dialog.DataContext = new JobTitlesEditDialogViewModel(ApiService) { View = dialog };
 
-        //var dialog = new UserEditDialog();
-        //dialog.DataContext = new UserEditDialogViewModel(ApiService) { View = dialog };
+        var result = await dialog.ShowDialog<bool>(App.Owner);
 
-        //var result = await dialog.ShowDialog<bool>(App.Owner);
+        if (!result)
+            return;
 
-        //if (!result)
-        //    return;
+        var dialogData = (dialog.DataContext as JobTitlesEditDialogViewModel);
 
-        //var dialogData = (dialog.DataContext as UserEditDialogViewModel);
+        var newJobTitle = new JobTitle() { Name = dialogData.Name, };
 
-        //var newUser = new User()
-        //{
-        //    FirstName = dialogData.FirstName,
-        //    LastName = dialogData.LastName,
-        //    Surname = dialogData.Surname,
-        //    Cabinet = dialogData.SelectedCabinet,
-        //    JobTitle = dialogData.SelectedJobTitle,
-        //};
+        try
+        {
+            var createdUser = await ApiService.AddJobTitleAsync(newJobTitle);
 
-        //try
-        //{
-        //    var createdUser = await ApiService.AddUserAsync(newUser);
-
-        //    if (createdUser is not null)
-        //    {
-        //        Users.Add(createdUser);
-        //        SelectedJobTitle = createdUser;
-        //    }
-        //}
-        //catch
-        //{
-        //}
+            if (createdUser is not null)
+            {
+                JobTitles.Add(createdUser);
+                SelectedJobTitle = createdUser;
+            }
+        }
+        catch
+        {
+        }
     }
 
     private void DeleteJobTitle()

@@ -3,9 +3,9 @@ using UIClient.Views.Dialogs;
 
 namespace UIClient.Views;
 
-public partial class UserEditDialog : Window, IView, IClosable
+public partial class JobTitleEditDialog : Window, IView, IClosable
 {
-    public UserEditDialog()
+    public JobTitleEditDialog()
     {
         InitializeComponent();
     }

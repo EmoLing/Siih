@@ -19,8 +19,8 @@ public class JobTitlesController(ApplicationDBContext dbContext) : MainControlle
         return await DbContext.JobTitles.ToListAsync();
     }
 
-    [HttpPost(Name = nameof(CreateJobTitle))]
-    public async Task<IActionResult> CreateJobTitle(JobTitle jobTitle)
+    [HttpPost]
+    public async Task<IActionResult> AddJobTitle([FromBody] JobTitle jobTitle)
     {
         await DbContext.JobTitles.AddAsync(jobTitle, CancellationToken);
         await DbContext.SaveChangesAsync(CancellationToken);

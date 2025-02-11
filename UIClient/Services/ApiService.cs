@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.JsonPatch;
 using Newtonsoft.Json;
+using DB.Models.Equipment;
 
 namespace UIClient.Services;
 
@@ -74,5 +75,37 @@ public class ApiService
 
     public async Task<List<Department>> GetDepartmentsAsync() => await _httpClient.GetFromJsonAsync<List<Department>>("api/departments");
     public async Task<List<Cabinet>> GetCabinetsAsync() => await _httpClient.GetFromJsonAsync<List<Cabinet>>("api/cabinets");
+
     public async Task<List<JobTitle>> GetJobTitlesAsync() => await _httpClient.GetFromJsonAsync<List<JobTitle>>("api/jobtitles");
+
+    public async Task<JobTitle> AddJobTitleAsync(JobTitle jobTitle)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/jobtitles", jobTitle, _cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        var createdJobTitle = await response.Content.ReadFromJsonAsync<JobTitle>(_cancellationToken);
+        return createdJobTitle;
+    }
+
+    public async Task<List<Software>> GetSoftwaresAsync() => await _httpClient.GetFromJsonAsync<List<Software>>("api/softwares");
+
+    public async Task<Software> AddSoftwareAsync(Software software)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/softwares", software, _cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        var createdSoftware = await response.Content.ReadFromJsonAsync<Software>(_cancellationToken);
+        return createdSoftware;
+    }
+
+    public async Task<List<Hardware>> GetHardwaresAsync() => await _httpClient.GetFromJsonAsync<List<Hardware>>("api/hardwares");
+
+    public async Task<Hardware> AddHardwareAsync(Hardware hardware)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/hardwares", hardware, _cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        var createdHardware = await response.Content.ReadFromJsonAsync<Hardware>(_cancellationToken);
+        return createdHardware;
+    }
 }

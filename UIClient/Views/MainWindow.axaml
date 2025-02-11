@@ -18,6 +18,8 @@
 		<StackPanel DockPanel.Dock="Left" Width="200" Background="LightGray">
 			<Button Content="Пользователи" Command="{Binding ShowUsersCommand}" Margin="10"/>
 			<Button Content="Должности" Command="{Binding ShowJobTitlesCommand}" Margin="10"/>
+			<Button Content="ПО" Command="{Binding ShowSoftwaresCommand}" Margin="10"/>
+			<Button Content="Оборудование" Command="{Binding ShowHardwaresCommand}" Margin="10"/>
 		</StackPanel>
 		<ContentControl Content="{Binding CurrentContent}" />
 	</DockPanel>

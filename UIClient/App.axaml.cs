@@ -7,6 +7,7 @@ using System;
 using System.Net.Http;
 using UIClient.Services;
 using UIClient.ViewModels;
+using UIClient.ViewModels.Equipment;
 using UIClient.Views;
 
 namespace UIClient;
@@ -29,6 +30,9 @@ public partial class App : Application
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<UsersViewModel>();
         services.AddTransient<JobTitlesViewModel>();
+        services.AddTransient<SoftwaresViewModel>();
+        services.AddTransient<HardwaresViewModel>();
+        //services.AddTransient<JobTitlesViewModel>();
 
         var serviceProvider = services.BuildServiceProvider();
 
