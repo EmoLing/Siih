@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using UIClient.Services;
+using UIClient.Views;
 
 namespace UIClient.ViewModels;
 
@@ -12,6 +13,7 @@ public abstract class ViewModel : ViewModelBase
     }
 
     protected ApiService ApiService { get; }
+    internal IView View { get; init; }
 
     protected abstract Task LoadDataAsync();
 }

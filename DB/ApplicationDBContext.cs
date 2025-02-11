@@ -39,6 +39,10 @@ public class ApplicationDBContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<DatabaseObject>()
+            .Property(o => o.Id)
+            .ValueGeneratedOnAdd();
+
+        modelBuilder.Entity<DatabaseObject>()
             .Property(o => o.Guid)
             .HasValueGenerator<GuidValueGenerator>();
 

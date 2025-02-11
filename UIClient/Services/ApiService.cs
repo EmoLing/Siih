@@ -1,10 +1,15 @@
 ﻿using DB.Models.Departments;
 using DB.Models.Users;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json.Serialization;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.JsonPatch;
+using Newtonsoft.Json;
 
 namespace UIClient.Services;
 
@@ -21,11 +26,50 @@ public class ApiService
 
     public async Task<List<User>> GetUsersAsync() => await _httpClient.GetFromJsonAsync<List<User>>("api/users");
 
-    public async Task<bool> AddUserAsync(User user)
+    public async Task<User> AddUserAsync(User user)
     {
         var response = await _httpClient.PostAsJsonAsync("api/users", user, _cancellationToken);
         response.EnsureSuccessStatusCode();
-        return true;
+
+        var createdUser = await response.Content.ReadFromJsonAsync<User>(_cancellationToken);
+        return createdUser;
+    }
+
+    public async Task<User> UpdateUserAsync(User originalUser, User editedUser)
+    {
+        try
+        {
+            var patchDoc = CreatePatch(originalUser, editedUser);
+
+            var json = JsonConvert.SerializeObject(patchDoc.Operations);
+            var content = new StringContent(json, Encoding.UTF8, "application/json-patch+json");
+
+            var response = await _httpClient.PatchAsync($"api/users/{originalUser.Id}", content);
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<User>(_cancellationToken);
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Ошибка при обновлении пользователя: {ex.Message}");
+            return null;
+        }
+    }
+
+    public JsonPatchDocument<User> CreatePatch(User originalUser, User updatedUser)
+    {
+        var patchDoc = new JsonPatchDocument<User>();
+
+        if (originalUser.Name != updatedUser.Name)
+            patchDoc.Replace(u => u.Name, updatedUser.Name);
+
+        if (originalUser.JobTitle != updatedUser.JobTitle)
+            patchDoc.Replace(u => u.JobTitle, updatedUser.JobTitle);
+
+        if (originalUser.Cabinet != updatedUser.Cabinet)
+            patchDoc.Replace(u => u.Cabinet, updatedUser.Cabinet);
+
+        return patchDoc;
     }
 
     public async Task<List<Department>> GetDepartmentsAsync() => await _httpClient.GetFromJsonAsync<List<Department>>("api/departments");

@@ -14,11 +14,18 @@ namespace UIClient.ViewModels;
 public class UsersViewModel : ViewModel
 {
     private ObservableCollection<User> _users = [];
+    private User _selectedUser;
 
     public ObservableCollection<User> Users
     {
         get => _users;
         set => this.RaiseAndSetIfChanged(ref _users, value);
+    }
+
+    public User SelectedUser
+    {
+        get => _selectedUser;
+        set => this.RaiseAndSetIfChanged(ref _selectedUser, value);
     }
 
     public ReactiveCommand<Unit, Unit> AddUserCommand { get; }
@@ -41,7 +48,8 @@ public class UsersViewModel : ViewModel
 
     private async Task AddUser()
     {
-        var dialog = new UserEditDialog() { DataContext = new UserEditDialogViewModel(ApiService) };
+        var dialog = new UserEditDialog();
+        dialog.DataContext = new UserEditDialogViewModel(ApiService) { View = dialog };
 
         var result = await dialog.ShowDialog<bool>(App.Owner);
 
@@ -59,7 +67,19 @@ public class UsersViewModel : ViewModel
             JobTitle = dialogData.SelectedJobTitle,
         };
 
-        await ApiService.AddUserAsync(newUser);
+        try
+        {
+            var createdUser = await ApiService.AddUserAsync(newUser);
+
+            if (createdUser is not null)
+            {
+                Users.Add(createdUser);
+                SelectedUser = createdUser;
+            }
+        }
+        catch
+        {
+        }
     }
 
     private void DeleteUser()
@@ -67,9 +87,60 @@ public class UsersViewModel : ViewModel
         // Логика удаления пользователя
     }
 
-    private Task EditUser()
+    private async Task EditUser()
     {
-        return Task.CompletedTask;
-        // Логика изменения пользователя
+        if (SelectedUser is null)
+            return;
+
+        var dialog = new UserEditDialog();
+
+        dialog.DataContext = new UserEditDialogViewModel(ApiService)
+        {
+            FirstName = SelectedUser.FirstName,
+            LastName = SelectedUser.LastName,
+            Surname = SelectedUser.Surname,
+            SelectedCabinet = SelectedUser.Cabinet,
+            SelectedJobTitle = SelectedUser.JobTitle,
+            View = dialog,
+        };
+
+        var result = await dialog.ShowDialog<bool>(App.Owner);
+
+        if (!result)
+            return;
+
+        var dialogData = (dialog.DataContext as UserEditDialogViewModel);
+
+        var originalUser = new User
+        {
+            Id = SelectedUser.Id,
+            Name = SelectedUser.Name,
+            Surname = SelectedUser.Surname,
+            JobTitle = SelectedUser.JobTitle,
+            Cabinet = SelectedUser.Cabinet
+        };
+
+        var editUser = new User()
+        {
+            FirstName = dialogData.FirstName,
+            LastName = dialogData.LastName,
+            Surname = dialogData.Surname,
+            Cabinet = dialogData.SelectedCabinet,
+            JobTitle = dialogData.SelectedJobTitle,
+        };
+
+        try
+        {
+            var updatedUser = await ApiService.UpdateUserAsync(originalUser, editUser);
+
+            if (updatedUser is not null)
+            {
+                Users.Replace(SelectedUser, updatedUser);
+                SelectedUser = updatedUser;
+            }
+        }
+        catch
+        {
+        }
     }
 }

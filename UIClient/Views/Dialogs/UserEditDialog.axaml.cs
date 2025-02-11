@@ -5,7 +5,7 @@ using UIClient.Views.Dialogs;
 
 namespace UIClient.Views;
 
-public partial class UserEditDialog : Window, IClosable
+public partial class UserEditDialog : Window, IView, IClosable
 {
     public UserEditDialog()
     {

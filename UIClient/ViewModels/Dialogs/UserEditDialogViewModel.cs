@@ -1,7 +1,8 @@
 ﻿using DB.Models.Departments;
 using DB.Models.Users;
 using ReactiveUI;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using UIClient.Services;
@@ -16,6 +17,9 @@ public class UserEditDialogViewModel : ViewModel
     private string _surname;
     private JobTitle _selectedJobTitle;
     private Cabinet _selectedCabinet;
+
+    private ObservableCollection<JobTitle> _jobTitles = [];
+    private ObservableCollection<Cabinet> _cabinets = [];
 
     public UserEditDialogViewModel(ApiService apiService)
         : base(apiService)
@@ -54,8 +58,18 @@ public class UserEditDialogViewModel : ViewModel
         set => this.RaiseAndSetIfChanged(ref _selectedCabinet, value);
     }
 
-    public List<JobTitle> JobTitles { get; private set; }
-    public List<Cabinet> Cabinets { get; private set; }
+    public ObservableCollection<JobTitle> JobTitles
+    {
+        get => _jobTitles;
+        set => this.RaiseAndSetIfChanged(ref _jobTitles, value);
+    }
+
+    public ObservableCollection<Cabinet> Cabinets
+    {
+        get => _cabinets;
+        set => this.RaiseAndSetIfChanged(ref _cabinets, value);
+    }
+
 
     public ICommand SaveCommand { get; }
     public ICommand CancelCommand { get; }
@@ -65,8 +79,11 @@ public class UserEditDialogViewModel : ViewModel
         var cabinets = await ApiService.GetCabinetsAsync();
         var jobTitles = await ApiService.GetJobTitlesAsync();
 
-        JobTitles = jobTitles;
-        Cabinets = cabinets;
+        JobTitles = new ObservableCollection<JobTitle>(jobTitles);
+        Cabinets = new ObservableCollection<Cabinet>(cabinets);
+
+        SelectedJobTitle = _selectedJobTitle ?? JobTitles.FirstOrDefault();
+        SelectedCabinet = _selectedCabinet ?? Cabinets.FirstOrDefault();
     }
 
     private void Save()
@@ -81,7 +98,7 @@ public class UserEditDialogViewModel : ViewModel
 
     private void CloseDialog(bool result)
     {
-        if (this is IClosable closable)
+        if (View is IClosable closable)
             closable.Close(result);
     }
 }

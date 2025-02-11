@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Server.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
 public class JobTitlesController(ApplicationDBContext dbContext) : MainController(dbContext)
 {
 

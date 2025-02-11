@@ -16,17 +16,24 @@ public class MainWindowViewModel : ViewModelBase
     }
 
     public ReactiveCommand<Unit, Unit> ShowUsersCommand { get; }
+    public ReactiveCommand<Unit, Unit> ShowJobTitlesCommand { get; }
 
     public MainWindowViewModel(ApiService apiService)
     {
         _apiService = apiService;
 
         ShowUsersCommand = ReactiveCommand.Create(ShowUsers);
+        ShowJobTitlesCommand = ReactiveCommand.Create(ShowJobTitles);
     }
 
     private void ShowUsers()
     {
         CurrentContent = new UsersViewModel(_apiService);
+    }
+
+    private void ShowJobTitles()
+    {
+        CurrentContent = new JobTitlesViewModel(_apiService);
     }
 
 }

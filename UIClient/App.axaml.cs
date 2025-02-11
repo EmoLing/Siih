@@ -28,6 +28,7 @@ public partial class App : Application
         services.AddSingleton<ApiService>();
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<UsersViewModel>();
+        services.AddTransient<JobTitlesViewModel>();
 
         var serviceProvider = services.BuildServiceProvider();
 

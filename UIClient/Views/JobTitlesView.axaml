@@ -4,21 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 xmlns:vm="clr-namespace:UIClient.ViewModels"
-             x:Class="UIClient.Views.UsersView"
-			 x:DataType="vm:UsersViewModel">
-	<Grid Margin="10 10 10 10">
+             x:Class="UIClient.Views.JobTitlesView"
+			 x:DataType="vm:JobTitlesViewModel">
+	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 		<StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-			<Button Content="Добавить" Command="{Binding AddUserCommand}" Margin="5"/>
-			<Button Content="Удалить" Command="{Binding DeleteUserCommand}" Margin="5"/>
-			<Button Content="Изменить" Command="{Binding EditUserCommand}" Margin="5"/>
+			<Button Content="Добавить" Command="{Binding AddCommand}" Margin="5"/>
+			<Button Content="Удалить" Command="{Binding DeleteCommand}" Margin="5"/>
+			<Button Content="Изменить" Command="{Binding EditCommand}" Margin="5"/>
 		</StackPanel>
 		<ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
-			<DataGrid ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}" IsReadOnly="True"
-					  GridLinesVisibility="All" 
+			<DataGrid ItemsSource="{Binding JobTitles}" IsReadOnly="True"
+					  GridLinesVisibility="All"
 					  BorderThickness="1" BorderBrush="Gray">
 				<DataGrid.Styles>
 					<Style Selector="DataGridColumnHeader">
@@ -36,14 +36,12 @@
 						<Setter Property="Padding" Value="5" />
 					</Style>
 				</DataGrid.Styles>
+
 				<DataGrid.Columns>
 					<DataGridTextColumn Header="№" Binding="{Binding Id}" Width="auto"/>
-					<DataGridTextColumn Header="Фамилия" Binding="{Binding LastName}" Width="*"/>
-					<DataGridTextColumn Header="Имя" Binding="{Binding FirstName}" Width="*"/>
-					<DataGridTextColumn Header="Должность" Binding="{Binding JobTitle.Name}" Width="*" />
-					<DataGridTextColumn Header="Кабинет" Binding="{Binding Cabinet.Name}" Width="*"/>
+					<DataGridTextColumn Header="Наименование" Binding="{Binding Name}" Width="*"/>
 				</DataGrid.Columns>
 			</DataGrid>
 		</ScrollViewer>
-	</Grid>
+	</Grid>	
 </UserControl>

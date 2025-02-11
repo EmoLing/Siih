@@ -7,7 +7,7 @@
         x:Class="UIClient.Views.UserEditDialog"
         Title="UserEditDialog"
 		x:DataType="vm:UserEditDialogViewModel">
-	<StackPanel>
+	<StackPanel Margin="10 10 10 0">
 		<TextBlock Text="Фамилия" />
 		<TextBox Text="{Binding LastName}"/>
 
@@ -18,9 +18,19 @@
 		<TextBox Text="{Binding Surname}"/>
 
 		<TextBlock Text="Должность" />
-		<ComboBox ItemsSource="{Binding JobTitles}" SelectedItem="{Binding SelectedJobTitle}" />
+		<ComboBox ItemsSource="{Binding JobTitles}" SelectedValue="{Binding SelectedJobTitle}"
+				  DisplayMemberBinding="{Binding Name}" Width="200" />
 
 		<TextBlock Text="Кабинет" />
-		<ComboBox ItemsSource="{Binding Cabinets}" SelectedItem="{Binding SelectedCabinet}" />
+		<ComboBox ItemsSource="{Binding Cabinets}" SelectedValue="{Binding SelectedCabinet}"
+				  DisplayMemberBinding="{Binding Name}" Width="200" />
+
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 20 0 0">
+			<Button Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+					Content="Сохранить" Command="{Binding SaveCommand}" Margin="0 0 10 0" />
+			
+			<Button Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+					Content="Отмена" Command="{Binding CancelCommand}" />
+		</StackPanel>
 	</StackPanel>
 </Window>
