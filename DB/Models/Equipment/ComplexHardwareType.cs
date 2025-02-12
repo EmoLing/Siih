@@ -8,7 +8,9 @@ namespace DB.Models.Equipment;
 
 public enum ComplexHardwareType
 {
+    UserArm,
+    DepartmentalArm,
+    Videoconferencing,
+    ServerComplex,
     Other,
-    Arm,
-    Videoconferencing
 }

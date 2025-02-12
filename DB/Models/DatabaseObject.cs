@@ -13,7 +13,7 @@ public abstract class DatabaseObject : IEquatable<DatabaseObject>
 
     public override bool Equals(object obj) => Equals(obj as DatabaseObject);
 
-    public bool Equals(DatabaseObject other) => Id == other.Id && Guid == other.Guid;
+    public bool Equals(DatabaseObject other) => other is not null && Id == other.Id && Guid == other.Guid;
 
     public override int GetHashCode() => base.GetHashCode();
 

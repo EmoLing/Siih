@@ -20,6 +20,7 @@
 			<Button Content="Должности" Command="{Binding ShowJobTitlesCommand}" Margin="10"/>
 			<Button Content="ПО" Command="{Binding ShowSoftwaresCommand}" Margin="10"/>
 			<Button Content="Оборудование" Command="{Binding ShowHardwaresCommand}" Margin="10"/>
+			<Button Content="Комплекс" Command="{Binding ShowComplexesHardwareCommand}" Margin="10"/>
 		</StackPanel>
 		<ContentControl Content="{Binding CurrentContent}" />
 	</DockPanel>

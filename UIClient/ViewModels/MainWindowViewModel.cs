@@ -20,6 +20,7 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> ShowJobTitlesCommand { get; }
     public ReactiveCommand<Unit, Unit> ShowSoftwaresCommand { get; }
     public ReactiveCommand<Unit, Unit> ShowHardwaresCommand { get; }
+    public ReactiveCommand<Unit, Unit> ShowComplexesHardwareCommand { get; }
 
     public MainWindowViewModel(ApiService apiService)
     {
@@ -29,6 +30,7 @@ public class MainWindowViewModel : ViewModelBase
         ShowJobTitlesCommand = ReactiveCommand.Create(ShowJobTitles);
         ShowSoftwaresCommand = ReactiveCommand.Create(ShowSoftwares);
         ShowHardwaresCommand = ReactiveCommand.Create(ShowHardwares);
+        ShowComplexesHardwareCommand = ReactiveCommand.Create(ShowComplexesHardware);
     }
 
     private void ShowUsers()
@@ -49,5 +51,10 @@ public class MainWindowViewModel : ViewModelBase
     private void ShowHardwares()
     {
         CurrentContent = new HardwaresViewModel(_apiService);
+    }
+
+    private void ShowComplexesHardware()
+    {
+        CurrentContent = new ComplexesHardwareViewModel(_apiService);
     }
 }

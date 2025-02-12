@@ -14,7 +14,7 @@ public class HardwaresController(ApplicationDBContext dbContext) : MainControlle
     public async Task<Hardware> GetSoftware(int id) => await DbContext.Hardwares.FirstOrDefaultAsync(h => h.Id == id, CancellationToken);
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Hardware>>> GetSoftwares()
+    public async Task<ActionResult<IEnumerable<Hardware>>> GetHardwares()
     {
         return await DbContext.Hardwares.Include(h => h.Softwares).Include(h => h.ComplexHardware).ToListAsync();
     }

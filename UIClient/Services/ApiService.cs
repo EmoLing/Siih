@@ -108,4 +108,15 @@ public class ApiService
         var createdHardware = await response.Content.ReadFromJsonAsync<Hardware>(_cancellationToken);
         return createdHardware;
     }
+
+    public async Task<List<ComplexHardware>> GetComplexesHardwareAsync() => await _httpClient.GetFromJsonAsync<List<ComplexHardware>>("api/complexeshardware");
+
+    public async Task<ComplexHardware> AddComplexHardwareAsync(ComplexHardware complexHardware)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/complexeshardware", complexHardware, _cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        var createdComplexHardware = await response.Content.ReadFromJsonAsync<ComplexHardware>(_cancellationToken);
+        return createdComplexHardware;
+    }
 }

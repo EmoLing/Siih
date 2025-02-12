@@ -1,0 +1,44 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		xmlns:vm="using:UIClient.ViewModels.Dialogs.Equipment"
+        x:Class="UIClient.Views.Dialogs.Equipment.ComplexHardwareEditDialog"
+        Title="ComplexHardwareEditDialog"
+		x:DataType="vm:ComplexHardwareEditDialogViewModel">
+	<StackPanel Margin="10 10 10 0">
+		<TextBlock Text="Наименование" />
+		<TextBox Text="{Binding Name}"/>
+
+		<TextBlock Text="Инвентарный номер" />
+		<TextBox Text="{Binding  InventoryNumber}"/>
+
+		<TextBlock Text="Пользователь" VerticalAlignment="Center" />
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="auto"/>
+			</Grid.ColumnDefinitions>
+			<TextBox Grid.Column="0" Text="{Binding User.Name}" VerticalAlignment="Center" Margin="0 5 5 5"/>
+			<Button Grid.Column="1" Content="Выбрать" VerticalAlignment="Center"/>
+		</Grid>
+
+		<StackPanel>
+			<WrapPanel>
+				<Button Content="Добавить" Command="{Binding AddHardwareCommand}" Width="100"
+						HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+				<Button Content="Создать" Command="{Binding CreateHardwareCommand}" Width="100"
+						HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+			</WrapPanel>
+			<ListBox ItemsSource="{Binding Hardwares}" SelectionMode="Multiple" Height="200" />
+		</StackPanel>
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 20 0 0">
+			<Button Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+					Content="Сохранить" Command="{Binding SaveCommand}" Margin="0 0 10 0" />
+
+			<Button Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+					Content="Отмена" Command="{Binding CancelCommand}" />
+		</StackPanel>
+	</StackPanel>
+</Window>

@@ -32,7 +32,7 @@ public partial class App : Application
         services.AddTransient<JobTitlesViewModel>();
         services.AddTransient<SoftwaresViewModel>();
         services.AddTransient<HardwaresViewModel>();
-        //services.AddTransient<JobTitlesViewModel>();
+        services.AddTransient<ComplexesHardwareViewModel>();
 
         var serviceProvider = services.BuildServiceProvider();
 
