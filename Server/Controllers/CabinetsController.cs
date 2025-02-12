@@ -12,9 +12,7 @@ public class CabinetsController(ApplicationDBContext dbContext) : MainController
 {
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Cabinet>>> GetCabinets()
-    {
-        return await DbContext.Cabinets.ToListAsync();
-    }
+        => await DbContext.Cabinets.Include(c => c.Department).ToListAsync();
 
     [HttpPost]
     public async Task<IActionResult> AddCabinet([FromBody] Cabinet cabinet)
