@@ -7,6 +7,7 @@ using System;
 using System.Net.Http;
 using UIClient.Services;
 using UIClient.ViewModels;
+using UIClient.ViewModels.Departments;
 using UIClient.ViewModels.Equipment;
 using UIClient.Views;
 
@@ -28,11 +29,16 @@ public partial class App : Application
         services.AddSingleton<HttpClient>(sp => new HttpClient() { BaseAddress = new System.Uri("https://localhost:7208") });
         services.AddSingleton<ApiService>();
         services.AddTransient<MainWindowViewModel>();
+
         services.AddTransient<UsersViewModel>();
         services.AddTransient<JobTitlesViewModel>();
+
         services.AddTransient<SoftwaresViewModel>();
         services.AddTransient<HardwaresViewModel>();
         services.AddTransient<ComplexesHardwareViewModel>();
+
+        services.AddTransient<CabinetsViewModel>();
+        services.AddTransient<DepartmentsViewModel>();
 
         var serviceProvider = services.BuildServiceProvider();
 

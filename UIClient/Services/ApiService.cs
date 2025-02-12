@@ -25,6 +25,7 @@ public class ApiService
         _cancellationToken = new CancellationToken();
     }
 
+    #region Users
     public async Task<List<User>> GetUsersAsync() => await _httpClient.GetFromJsonAsync<List<User>>("api/users");
 
     public async Task<User> AddUserAsync(User user)
@@ -72,10 +73,38 @@ public class ApiService
 
         return patchDoc;
     }
+    #endregion
+
+    #region Departments
 
     public async Task<List<Department>> GetDepartmentsAsync() => await _httpClient.GetFromJsonAsync<List<Department>>("api/departments");
+
+    public async Task<Department> AddDepartmentAsync(Department department)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/departments", department, _cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        var createdDepartment = await response.Content.ReadFromJsonAsync<Department>(_cancellationToken);
+        return createdDepartment;
+    }
+
+    #endregion
+
+    #region Cabinets
+
     public async Task<List<Cabinet>> GetCabinetsAsync() => await _httpClient.GetFromJsonAsync<List<Cabinet>>("api/cabinets");
 
+    public async Task<Cabinet> AddCabinetAsync(Cabinet cabinet)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/cabinets", cabinet, _cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        var createdCabinet = await response.Content.ReadFromJsonAsync<Cabinet>(_cancellationToken);
+        return createdCabinet;
+    }
+    #endregion
+
+    #region JobTitles
     public async Task<List<JobTitle>> GetJobTitlesAsync() => await _httpClient.GetFromJsonAsync<List<JobTitle>>("api/jobtitles");
 
     public async Task<JobTitle> AddJobTitleAsync(JobTitle jobTitle)
@@ -86,7 +115,9 @@ public class ApiService
         var createdJobTitle = await response.Content.ReadFromJsonAsync<JobTitle>(_cancellationToken);
         return createdJobTitle;
     }
+    #endregion
 
+    #region Softwares
     public async Task<List<Software>> GetSoftwaresAsync() => await _httpClient.GetFromJsonAsync<List<Software>>("api/softwares");
 
     public async Task<Software> AddSoftwareAsync(Software software)
@@ -97,7 +128,9 @@ public class ApiService
         var createdSoftware = await response.Content.ReadFromJsonAsync<Software>(_cancellationToken);
         return createdSoftware;
     }
+    #endregion
 
+    #region Hardwares
     public async Task<List<Hardware>> GetHardwaresAsync() => await _httpClient.GetFromJsonAsync<List<Hardware>>("api/hardwares");
 
     public async Task<Hardware> AddHardwareAsync(Hardware hardware)
@@ -108,7 +141,9 @@ public class ApiService
         var createdHardware = await response.Content.ReadFromJsonAsync<Hardware>(_cancellationToken);
         return createdHardware;
     }
+    #endregion
 
+    #region ComplexesHardware
     public async Task<List<ComplexHardware>> GetComplexesHardwareAsync() => await _httpClient.GetFromJsonAsync<List<ComplexHardware>>("api/complexeshardware");
 
     public async Task<ComplexHardware> AddComplexHardwareAsync(ComplexHardware complexHardware)
@@ -119,4 +154,5 @@ public class ApiService
         var createdComplexHardware = await response.Content.ReadFromJsonAsync<ComplexHardware>(_cancellationToken);
         return createdComplexHardware;
     }
+    #endregion
 }
