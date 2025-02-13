@@ -3,6 +3,7 @@ using System.Reactive;
 using UIClient.Services;
 using UIClient.ViewModels.Departments;
 using UIClient.ViewModels.Equipment;
+using UIClient.ViewModels.Reports.Act_1_3;
 
 namespace UIClient.ViewModels;
 
@@ -25,6 +26,8 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> ShowCabinetsCommand { get; }
     public ReactiveCommand<Unit, Unit> ShowDepartmentsCommand { get; }
 
+    public ReactiveCommand<Unit, Unit> ShowReportDialogCommand { get; }
+
     public MainWindowViewModel(ApiService apiService)
     {
         _apiService = apiService;
@@ -36,6 +39,7 @@ public class MainWindowViewModel : ViewModelBase
         ShowComplexesHardwareCommand = ReactiveCommand.Create(ShowComplexesHardware);
         ShowCabinetsCommand = ReactiveCommand.Create(ShowCabinets);
         ShowDepartmentsCommand = ReactiveCommand.Create(ShowDepartments);
+        ShowReportDialogCommand = ReactiveCommand.Create(ShowReportDialog);
     }
 
     private void ShowUsers()
@@ -71,5 +75,10 @@ public class MainWindowViewModel : ViewModelBase
     private void ShowDepartments()
     {
         CurrentContent = new DepartmentsViewModel(_apiService);
+    }
+
+    private void ShowReportDialog()
+    {
+        CurrentContent = new Act_1_3InfoDialogViewModel(_apiService);
     }
 }

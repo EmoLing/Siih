@@ -1,0 +1,63 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:vm="using:UIClient.ViewModels.Reports.Act_1_3"
+			 xmlns:model="using:DB.Models.Equipment"
+			 xmlns:reportmodel="using:ReportModel.Акт_со_1._3"
+			 x:Class="UIClient.Views.Reports.Act_1_3.Act_1_3InfoDialogView"
+			 x:DataType="vm:Act_1_3InfoDialogViewModel">
+	<StackPanel Margin="10">
+		<StackPanel Orientation="Horizontal">
+			<Button Content="Сгенерировать отчет" Command="{Binding GenerateReportCommand }" />
+		</StackPanel>
+		<TextBlock Text="Наименование"/>
+		<TextBox Text="{Binding Title}" />
+		<StackPanel Orientation="Horizontal">
+			<Button Content="Добавить комплекс" Command="{Binding SelectComplexesHardwaresCommand}" />
+			<Button Content="Удалить комплекс" Command="{Binding RemoveComplexesHardwaresCommand}" />
+		</StackPanel>
+		<ListBox ItemsSource="{Binding ComplexesHardware}" >
+			<ListBox.ItemTemplate>
+				<DataTemplate x:DataType="vm:ReportComplexHardwareViewModel">
+					<Expander Header="{Binding ComplexHardware.Name}">
+						<StackPanel>
+							<ListBox ItemsSource="{Binding Hardwares}">
+								<ListBox.ItemTemplate>
+									<DataTemplate x:DataType="vm:ReportHardwareViewModel">
+										<StackPanel Orientation="Horizontal">
+											<TextBlock Text="{Binding Hardware.Name}" VerticalAlignment="Center" Margin="0,0,10,0" />
+											<Button Content="Create"
+													Command="{Binding ((vm:Act_1_3InfoDialogViewModel)DataContext).CreateErrorsPTSCommand,
+														RelativeSource={RelativeSource AncestorType=Window}}"
+													CommandParameter="{Binding}"
+													IsEnabled="{Binding !IsInErrorPTS}" />
+										</StackPanel>
+									</DataTemplate>
+								</ListBox.ItemTemplate>
+							</ListBox>
+						</StackPanel>
+					</Expander>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+		<DataGrid ItemsSource="{Binding ErrorsPTS}" x:DataType="vm:Act_1_3InfoDialogViewModel">
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Наименование" Binding="{Binding Hardware.Name}" IsReadOnly="True"/>
+				<DataGridTextColumn Header="IncomingInspection" Binding="{Binding IncomingInspection}" />
+				<DataGridTextColumn Header="FunctioningInspection" Binding="{Binding FunctioningInspection}" />
+				<DataGridTemplateColumn Header="">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<Button Content="Удалить"
+                                    Command="{Binding ((vm:Act_1_3InfoDialogViewModel)DataContext).RemoveErrorPTSCommand,
+										RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                    CommandParameter="{Binding}" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+			</DataGrid.Columns>
+		</DataGrid>
+	</StackPanel>
+</UserControl>

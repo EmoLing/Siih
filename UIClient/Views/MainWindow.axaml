@@ -23,6 +23,7 @@
 			<Button Content="Комплекс" Command="{Binding ShowComplexesHardwareCommand}" Margin="10"/>
 			<Button Content="Кабинеты" Command="{Binding ShowCabinetsCommand}" Margin="10"/>
 			<Button Content="Отделы" Command="{Binding ShowDepartmentsCommand}" Margin="10"/>
+			<Button Content="Отчет" Command="{Binding ShowReportDialogCommand}" Margin="10"/>
 		</StackPanel>
 		<ContentControl Content="{Binding CurrentContent}" />
 	</DockPanel>

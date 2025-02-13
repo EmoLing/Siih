@@ -30,9 +30,14 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\DB\DB.csproj" />
+    <ProjectReference Include="..\ReportGenerator\ReportGenerator.csproj" />
+    <ProjectReference Include="..\ReportModel\ReportModel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\Reports\Act_1_3\Act_1_3InfoDialogView.axaml.cs">
+      <DependentUpon>Act_1_3InfoDialogView.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\UsersView.axaml.cs">
       <DependentUpon>UsersView.axaml</DependentUpon>
     </Compile>

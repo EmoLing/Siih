@@ -9,6 +9,7 @@ using UIClient.Services;
 using UIClient.ViewModels;
 using UIClient.ViewModels.Departments;
 using UIClient.ViewModels.Equipment;
+using UIClient.ViewModels.Reports.Act_1_3;
 using UIClient.Views;
 
 namespace UIClient;
@@ -39,6 +40,8 @@ public partial class App : Application
 
         services.AddTransient<CabinetsViewModel>();
         services.AddTransient<DepartmentsViewModel>();
+
+        services.AddTransient<Act_1_3InfoDialogViewModel>();
 
         var serviceProvider = services.BuildServiceProvider();
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ReportModel;
 
-public enum IReportType
+public enum ReportType
 {
     Act_so_1_3,
 }

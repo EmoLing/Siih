@@ -10,5 +10,5 @@ public abstract class ReportInfo
 {
     public List<TableInfo> TablesInfo { get; } = [];
 
-    public virtual IReportType ReportType { get; }
+    public virtual ReportType ReportType { get; }
 }

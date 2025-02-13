@@ -9,7 +9,7 @@ internal class ReportFactory
 {
     public static Report CreateReport(ReportInfo reportInfo) => reportInfo.ReportType switch
     {
-        IReportType.Act_so_1_3 => new Act_1_3_Report(reportInfo),
+        ReportType.Act_so_1_3 => new Act_1_3_Report(reportInfo),
         _ => throw new ArgumentException(Messages.TypeNotFound)
     };
 }
