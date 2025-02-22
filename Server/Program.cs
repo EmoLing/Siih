@@ -1,4 +1,5 @@
-using DB;
+using Infrastructure;
+using IoC;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,8 @@ builder.Services.AddControllers().AddNewtonsoftJson(o
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddDbContext<ApplicationDBContext>();
+
+builder.Services.AddApplicationServices(builder.Configuration.GetConnectionString("DefaultConnection"));
 
 builder.Services.AddCors(options =>
 {
@@ -20,6 +22,8 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader(); // Разрешаем все заголовки
     });
 });
+
+builder.Services.AddAutoMapperProfilesServices();
 
 var app = builder.Build();
 

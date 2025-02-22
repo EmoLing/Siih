@@ -1,11 +1,11 @@
-﻿using DB.Models.Departments;
-using DynamicData;
-using ReactiveUI;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using DynamicData;
+using ReactiveUI;
+using Shared.DTOs.Departments;
 using UIClient.Services;
 using UIClient.Views.Dialogs;
 using UIClient.Views.Dialogs.Departments;
@@ -15,10 +15,10 @@ namespace UIClient.ViewModels.Dialogs.Departments;
 internal class DepartmentEditDialogViewModel : ViewModel
 {
     private string _name;
-    private ObservableCollection<Cabinet> _cabinets = [];
-    private readonly Department _department;
+    private ObservableCollection<CabinetObject> _cabinets = [];
+    private readonly DepartmentObject _department;
 
-    public DepartmentEditDialogViewModel(ApiService apiService, Department department)
+    public DepartmentEditDialogViewModel(ApiService apiService, DepartmentObject department)
         : base(apiService)
     {
         SaveCommand = ReactiveCommand.Create(Save);
@@ -39,7 +39,7 @@ internal class DepartmentEditDialogViewModel : ViewModel
         set => this.RaiseAndSetIfChanged(ref _name, value);
     }
 
-    public ObservableCollection<Cabinet> Cabinets
+    public ObservableCollection<CabinetObject> Cabinets
     {
         get => _cabinets;
         set => this.RaiseAndSetIfChanged(ref _cabinets, value);
@@ -51,7 +51,7 @@ internal class DepartmentEditDialogViewModel : ViewModel
             return;
 
         var allCabinets = await ApiService.GetCabinetsAsync();
-        Cabinets = new ObservableCollection<Cabinet>(allCabinets.Where(c => c.Department is null || c.Department == _department));
+        Cabinets = new ObservableCollection<CabinetObject>(allCabinets.Where(c => c.Department is null || c.Department == _department));
     }
 
     private void Save()

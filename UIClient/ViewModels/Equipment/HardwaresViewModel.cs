@@ -1,27 +1,23 @@
-﻿using DB.Models.Equipment;
-using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using System.Reactive;
-using System.Text;
 using System.Threading.Tasks;
+using ReactiveUI;
+using Shared.DTOs.Equipment;
 using UIClient.Services;
 
 namespace UIClient.ViewModels.Equipment;
 public class HardwaresViewModel : ViewModel
 {
-    private ObservableCollection<Hardware> _hardwares = [];
-    private Hardware _selectedHardware;
+    private ObservableCollection<HardwareObject> _hardwares = [];
+    private HardwareObject _selectedHardware;
 
-    public ObservableCollection<Hardware> Hardwares
+    public ObservableCollection<HardwareObject> Hardwares
     {
         get => _hardwares;
         set => this.RaiseAndSetIfChanged(ref _hardwares, value);
     }
 
-    public Hardware SelectedHardware
+    public HardwareObject SelectedHardware
     {
         get => _selectedHardware;
         set => this.RaiseAndSetIfChanged(ref _selectedHardware, value);
@@ -42,7 +38,7 @@ public class HardwaresViewModel : ViewModel
     protected override async Task LoadDataAsync()
     {
         var hardwares = await ApiService.GetHardwaresAsync();
-        Hardwares = new ObservableCollection<Hardware>(hardwares);
+        Hardwares = new ObservableCollection<HardwareObject>(hardwares);
     }
 
     private Task AddHardware()

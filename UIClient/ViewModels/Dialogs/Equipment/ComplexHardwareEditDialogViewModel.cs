@@ -1,11 +1,10 @@
-﻿using DB.Models.Equipment;
-using DB.Models.Users;
-using DynamicData;
-using ReactiveUI;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using DynamicData;
+using ReactiveUI;
+using Shared.DTOs.Equipment;
+using Shared.DTOs.Users;
 using UIClient.Services;
 using UIClient.Views.Dialogs;
 using UIClient.Views.Dialogs.Equipment;
@@ -15,12 +14,12 @@ namespace UIClient.ViewModels.Dialogs.Equipment;
 public class ComplexHardwareEditDialogViewModel : ViewModel
 {
     private string _name;
-    private User _user;
+    private UserObject _user;
     private string _inventoryNumber;
     private ComplexHardwareType _type;
-    private ObservableCollection<Hardware> _hardwares = [];
+    private ObservableCollection<HardwareObject> _hardwares = [];
 
-    public ComplexHardwareEditDialogViewModel(ApiService apiService, ComplexHardware complexHardware)
+    public ComplexHardwareEditDialogViewModel(ApiService apiService, ComplexHardwareObject complexHardware)
         : base(apiService)
     {
         SaveCommand = ReactiveCommand.Create(Save);
@@ -34,7 +33,7 @@ public class ComplexHardwareEditDialogViewModel : ViewModel
             Type = complexHardware.Type;
             InventoryNumber = complexHardware.InventoryNumber;
             User = complexHardware.User;
-            Hardwares = new ObservableCollection<Hardware>(complexHardware.Hardwares);
+            Hardwares = new ObservableCollection<HardwareObject>(complexHardware.Hardwares);
         }
     }
 
@@ -49,7 +48,7 @@ public class ComplexHardwareEditDialogViewModel : ViewModel
         set => this.RaiseAndSetIfChanged(ref _name, value);
     }
 
-    public User User
+    public UserObject User
     {
         get => _user;
         set => this.RaiseAndSetIfChanged(ref _user, value);
@@ -67,7 +66,7 @@ public class ComplexHardwareEditDialogViewModel : ViewModel
         set => this.RaiseAndSetIfChanged(ref _type, value);
     }
 
-    public ObservableCollection<Hardware> Hardwares
+    public ObservableCollection<HardwareObject> Hardwares
     {
         get => _hardwares;
         set => this.RaiseAndSetIfChanged(ref _hardwares, value);

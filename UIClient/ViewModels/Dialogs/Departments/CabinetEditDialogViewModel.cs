@@ -1,24 +1,17 @@
-﻿using DB.Models.Departments;
-using DB.Models.Equipment;
-using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows.Input;
+using ReactiveUI;
+using Shared.DTOs.Departments;
 using UIClient.Services;
-using UIClient.ViewModels.Dialogs.Equipment;
 using UIClient.Views.Dialogs;
 using UIClient.Views.Dialogs.Departments;
-using UIClient.Views.Dialogs.Equipment;
 
 namespace UIClient.ViewModels.Dialogs.Departments;
 
 internal class CabinetEditDialogViewModel : ViewModel
 {
     private string _name;
-    private Department _department;
+    private DepartmentObject _department;
 
     public CabinetEditDialogViewModel(ApiService apiService)
         : base(apiService)
@@ -38,7 +31,7 @@ internal class CabinetEditDialogViewModel : ViewModel
         set => this.RaiseAndSetIfChanged(ref _name, value);
     }
 
-    public Department Department
+    public DepartmentObject Department
     {
         get => _department;
         set => this.RaiseAndSetIfChanged(ref _department, value);

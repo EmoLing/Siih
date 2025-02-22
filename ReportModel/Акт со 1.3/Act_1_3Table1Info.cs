@@ -1,9 +1,9 @@
 ﻿using Common;
-using DB.Models.Equipment;
+using Shared.DTOs.Equipment;
 
 namespace ReportModel.Акт_со_1._3;
 
-public class Act_1_3Table1Info(List<ComplexHardware> complexesHardware) : TableInfo
+public class Act_1_3Table1Info(List<ComplexHardwareObject> complexesHardware) : TableInfo
 {
     private int _startNumber = 0;
 

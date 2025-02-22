@@ -1,45 +1,66 @@
-﻿using DB.Models.Departments;
-using DB;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Core.Models.Departments;
+using Core.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DB.Models.Equipment;
+using Shared.DTOs.Departments;
 
 namespace Server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class DepartmentsController(ApplicationDBContext dbContext) : MainController(dbContext)
+public class DepartmentsController(DepartmentService service, IMapper mapper) : MainController(mapper)
 {
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
+    [HttpGet("{id}")]
+    public async Task<ActionResult<DepartmentObject>> GetDepartment(int id)
     {
-        return await DbContext.Departments.Include(d => d.Cabinets).ToListAsync();
+        var department = await service.GetDepartmentByIdAsync(id);
+
+        if (department is null)
+            BadRequest(id);
+
+        var foundDepartment = mapper.Map<DepartmentObject>(department);
+
+        return Ok(foundDepartment);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<DepartmentObject>>> GetAllDepartments()
+    {
+        var coreDepartments = await service.GetAllDepartmentsAsync();
+        var serverDepartment = mapper.Map<IEnumerable<DepartmentObject>>(coreDepartments);
+        return Ok(serverDepartment);
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddDepartment([FromBody] Department department)
+    public async Task<ActionResult<DepartmentObject>> AddDepartment([FromBody] DepartmentObject departmentObject)
     {
-        if (department is null)
-            return BadRequest("Данные кабинета не предоставлены.");
+        if (departmentObject is null)
+            return BadRequest("Данные пользователя не предоставлены.");
 
-        if (department.Cabinets.Count > 0)
-        {
-            var existingCabinets = await DbContext.Cabinets.Where(c => department.Cabinets.Contains(c)).ToListAsync();
-            var newExistingCabinets = department.Cabinets.Where(c => !existingCabinets.Contains(c));
+        var coreDepartment = mapper.Map<Department>(departmentObject);
+        var createdCoreDepartment = await service.AddDepartmentAsync(coreDepartment);
+        var createdDepartment = mapper.Map<DepartmentObject>(coreDepartment);
 
-            department.Cabinets.Clear();
+        return CreatedAtAction(nameof(GetDepartment), new { id = createdDepartment.Id }, createdDepartment);
+    }
 
-            if (newExistingCabinets.Any())
-                await DbContext.Cabinets.AddRangeAsync(newExistingCabinets);
+    [HttpPut]
+    public async Task<IActionResult> UpdateDepartment(DepartmentObject departmentObject, CancellationToken cancellationToken)
+    {
+        if (departmentObject is null)
+            return BadRequest();
 
-            if (existingCabinets.Count > 0)
-                department.Cabinets.AddRange(existingCabinets);
-        }
+        var coreDepartment = mapper.Map<Department>(departmentObject);
+        await service.UpdateDepartmentAsync(coreDepartment, cancellationToken);
 
-        await DbContext.Departments.AddAsync(department, CancellationToken);
-        await DbContext.SaveChangesAsync(CancellationToken);
+        return NoContent();
+    }
 
-        return Ok(department);
+    [HttpDelete(Name = nameof(DeleteDepartment))]
+    public async Task<IActionResult> DeleteDepartment(int id)
+    {
+        bool result = await service.DeleteDepartmentAsync(id);
+        return result ? NoContent() : BadRequest();
     }
 }
+

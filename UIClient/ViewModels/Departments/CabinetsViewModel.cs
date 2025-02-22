@@ -1,33 +1,26 @@
-﻿using DB.Models.Departments;
-using DB.Models.Equipment;
-using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using System.Reactive;
-using System.Text;
 using System.Threading.Tasks;
+using ReactiveUI;
+using Shared.DTOs.Departments;
 using UIClient.Services;
 using UIClient.ViewModels.Dialogs.Departments;
-using UIClient.ViewModels.Dialogs.Equipment;
 using UIClient.Views.Dialogs.Departments;
-using UIClient.Views.Dialogs.Equipment;
 
 namespace UIClient.ViewModels.Departments;
 
 public class CabinetsViewModel : ViewModel
 {
-    private ObservableCollection<Cabinet> _cabinets = [];
-    private Cabinet _selectedCabinet;
+    private ObservableCollection<CabinetObject> _cabinets = [];
+    private CabinetObject _selectedCabinet;
 
-    public ObservableCollection<Cabinet> Cabinets
+    public ObservableCollection<CabinetObject> Cabinets
     {
         get => _cabinets;
         set => this.RaiseAndSetIfChanged(ref _cabinets, value);
     }
 
-    public Cabinet SelectedCabinet
+    public CabinetObject SelectedCabinet
     {
         get => _selectedCabinet;
         set => this.RaiseAndSetIfChanged(ref _selectedCabinet, value);
@@ -48,7 +41,7 @@ public class CabinetsViewModel : ViewModel
     protected override async Task LoadDataAsync()
     {
         var hardwares = await ApiService.GetCabinetsAsync();
-        Cabinets = new ObservableCollection<Cabinet>(hardwares);
+        Cabinets = new ObservableCollection<CabinetObject>(hardwares);
     }
 
     private async Task AddCabinet()
@@ -63,7 +56,7 @@ public class CabinetsViewModel : ViewModel
 
         var dialogData = (dialog.DataContext as CabinetEditDialogViewModel);
 
-        var cabinet = new Cabinet()
+        var cabinet = new CabinetObject()
         {
             Name = dialogData.Name,
             Department = dialogData.Department,

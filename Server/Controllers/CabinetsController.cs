@@ -1,38 +1,65 @@
-﻿using DB;
-using DB.Models.Departments;
-using DB.Models.Users;
+﻿using AutoMapper;
+using Core.Models.Departments;
+using Core.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Shared.DTOs.Departments;
 
 namespace Server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class CabinetsController(ApplicationDBContext dbContext) : MainController(dbContext)
+public class CabinetsController(CabinetService service, IMapper mapper) : MainController(mapper)
 {
+    [HttpGet("{id}")]
+    public async Task<ActionResult<CabinetObject>> GetCabinet(int id)
+    {
+        var cabinet = await service.GetCabinetByIdAsync(id);
+
+        if (cabinet is null)
+            BadRequest(id);
+
+        var foundCabinet = mapper.Map<CabinetObject>(cabinet);
+
+        return Ok(foundCabinet);
+    }
+
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Cabinet>>> GetCabinets()
-        => await DbContext.Cabinets.Include(c => c.Department).ToListAsync();
+    public async Task<ActionResult<IEnumerable<CabinetObject>>> GetCabinets()
+    {
+        var coreCabinets = await service.GetAllCabinetsAsync();
+        var serverCabinets = mapper.Map<IEnumerable<CabinetObject>>(coreCabinets);
+        return Ok(serverCabinets);
+    }
 
     [HttpPost]
-    public async Task<IActionResult> AddCabinet([FromBody] Cabinet cabinet)
+    public async Task<ActionResult<CabinetObject>> AddCabinet([FromBody] CabinetObject cabinetObject)
     {
-        if (cabinet is null)
-            return BadRequest("Данные кабинета не предоставлены.");
+        if (cabinetObject is null)
+            return BadRequest("Данные пользователя не предоставлены.");
 
-        if (cabinet.Department is not null)
-        {
-            var existingDepartment = await DbContext.Departments.FirstOrDefaultAsync(d => d.Id == cabinet.Department.Id, CancellationToken);
+        var coreCabinet = mapper.Map<Cabinet>(cabinetObject);
+        var createdCoreCabinet = await service.AddCabinetAsync(coreCabinet);
+        var createdCabinet = mapper.Map<CabinetObject>(coreCabinet);
 
-            if (existingDepartment is null)
-                DbContext.Departments.Add(cabinet.Department);
-            else
-                cabinet.Department = existingDepartment;
-        }
+        return CreatedAtAction(nameof(GetCabinet), new { id = createdCabinet.Id }, createdCabinet);
+    }
 
-        await DbContext.Cabinets.AddAsync(cabinet, CancellationToken);
-        await DbContext.SaveChangesAsync(CancellationToken);
+    [HttpPut]
+    public async Task<IActionResult> UpdateCabinet(CabinetObject cabinetObject, CancellationToken cancellationToken)
+    {
+        if (cabinetObject is null)
+            return BadRequest();
 
-        return Ok(cabinet);
+        var coreCabinet = mapper.Map<Cabinet>(cabinetObject);
+        await service.UpdateCabinetAsync(coreCabinet, cancellationToken);
+
+        return NoContent();
+    }
+
+    [HttpDelete(Name = nameof(DeleteCabinet))]
+    public async Task<IActionResult> DeleteCabinet(int id)
+    {
+        bool result = await service.DeleteCabinetAsync(id);
+        return result ? NoContent() : BadRequest();
     }
 }

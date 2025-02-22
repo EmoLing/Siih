@@ -1,10 +1,10 @@
-﻿using DB.Models.Departments;
-using ReactiveUI;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ReactiveUI;
+using Shared.DTOs.Departments;
 using UIClient.Services;
 using UIClient.Views.Dialogs;
 
@@ -13,9 +13,9 @@ namespace UIClient.ViewModels.Dialogs.Departments;
 public class SelectCabinetsDialogViewModel : ViewModel
 {
     private ObservableCollection<SelectedCabinetViewModel> _cabinets = [];
-    private readonly List<Cabinet> _earlySelectedCabinets = [];
+    private readonly List<CabinetObject> _earlySelectedCabinets = [];
 
-    public SelectCabinetsDialogViewModel(ApiService apiService, List<Cabinet> selectedCabinets)
+    public SelectCabinetsDialogViewModel(ApiService apiService, List<CabinetObject> selectedCabinets)
         : base(apiService)
     {
         AddCabinetsCommand = ReactiveCommand.Create(AddCabinets);
@@ -32,7 +32,7 @@ public class SelectCabinetsDialogViewModel : ViewModel
         set => this.RaiseAndSetIfChanged(ref _cabinets, value);
     }
 
-    public List<Cabinet> SelectedCabinets { get; private set; } = [];
+    public List<CabinetObject> SelectedCabinets { get; private set; } = [];
 
     protected override async Task LoadDataAsync()
     {

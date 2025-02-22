@@ -1,52 +1,65 @@
-﻿using DB;
-using DB.Models.Equipment;
-using DB.Models.Users;
+﻿using AutoMapper;
+using Core.Models.Equipment;
+using Core.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using Shared.DTOs.Equipment;
 
 namespace Server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ComplexesHardwareController(ApplicationDBContext dbContext) : MainController(dbContext)
+public class ComplexesHardwareController(ComplexHardwareService service, IMapper mapper) : MainController(mapper)
 {
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<ComplexHardware>>> GetComplexesHardware()
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ComplexHardwareObject>> GetComplexHardware(int id)
     {
-        return await DbContext.ComplexesHardware.Include(ch => ch.Hardwares).Include(ch => ch.User).ToListAsync();
+        var complexHardware = await service.GetComplexHardwareByIdAsync(id);
+
+        if (complexHardware is null)
+            BadRequest(id);
+
+        var foundComplexHardware = mapper.Map<ComplexHardwareObject>(complexHardware);
+
+        return Ok(foundComplexHardware);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<ComplexHardwareObject>>> GetAllComplexesHardware()
+    {
+        var coreComplexesHardware = await service.GetAllComplexesHardwareAsync();
+        var complexesHardware = mapper.Map<IEnumerable<ComplexHardwareObject>>(coreComplexesHardware);
+        return Ok(complexesHardware);
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddComplexHardware([FromBody] ComplexHardware complexHardware)
+    public async Task<ActionResult<ComplexHardwareObject>> AddComplexHardware([FromBody] ComplexHardwareObject complexHardware)
     {
-        if (complexHardware.User is not null)
-        {
-            var existingUser = await DbContext.Users.FirstOrDefaultAsync(ch => ch.Id == complexHardware.User.Id, CancellationToken);
+        if (complexHardware is null)
+            return BadRequest("Данные пользователя не предоставлены.");
 
-            if (existingUser is null)
-                DbContext.Users.Add(complexHardware.User);
-            else
-                complexHardware.User = existingUser;
-        }
+        var coreComplexHardware = mapper.Map<ComplexHardware>(complexHardware);
+        var createdCoreComplexHardware = await service.AddComplexHardwareAsync(coreComplexHardware);
+        var createdComplexHardware = mapper.Map<ComplexHardwareObject>(coreComplexHardware);
 
-        if (complexHardware.Hardwares.Count > 0)
-        {
-            var existingHardwares = await DbContext.Hardwares.Where(h => complexHardware.Hardwares.Contains(h)).ToListAsync();
-            var newExistingHardwares = complexHardware.Hardwares.Where(h => !existingHardwares.Contains(h));
+        return CreatedAtAction(nameof(GetComplexHardware), new { id = createdComplexHardware.Id }, createdComplexHardware);
+    }
 
-            complexHardware.Hardwares.Clear();
+    [HttpPut]
+    public async Task<IActionResult> UpdateComplexHardware(ComplexHardwareObject complexHardwareObject, CancellationToken cancellationToken)
+    {
+        if (complexHardwareObject is null)
+            return BadRequest();
 
-            if (newExistingHardwares.Any())
-                await DbContext.Hardwares.AddRangeAsync(newExistingHardwares);
+        var coreComplexHardware = mapper.Map<ComplexHardware>(complexHardwareObject);
+        await service.UpdateComplexHardwareAsync(coreComplexHardware, cancellationToken);
 
-            if (existingHardwares.Any())
-                complexHardware.Hardwares.AddRange(existingHardwares);
-        }
+        return NoContent();
+    }
 
-        await DbContext.ComplexesHardware.AddAsync(complexHardware, CancellationToken);
-        await DbContext.SaveChangesAsync(CancellationToken);
-
-        return Ok(complexHardware);
+    [HttpDelete(Name = nameof(DeleteComplexHardware))]
+    public async Task<IActionResult> DeleteComplexHardware(int id)
+    {
+        bool result = await service.DeleteComplexHardwareAsync(id);
+        return result ? NoContent() : BadRequest();
     }
 }

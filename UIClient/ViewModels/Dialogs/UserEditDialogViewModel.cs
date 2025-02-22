@@ -1,10 +1,10 @@
-﻿using DB.Models.Departments;
-using DB.Models.Users;
-using ReactiveUI;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ReactiveUI;
+using Shared.DTOs.Departments;
+using Shared.DTOs.Users;
 using UIClient.Services;
 using UIClient.Views.Dialogs;
 
@@ -15,11 +15,11 @@ public class UserEditDialogViewModel : ViewModel
 	private string _firstName;
     private string _lastName;
     private string _surname;
-    private JobTitle _selectedJobTitle;
-    private Cabinet _selectedCabinet;
+    private JobTitleObject _selectedJobTitle;
+    private CabinetObject _selectedCabinet;
 
-    private ObservableCollection<JobTitle> _jobTitles = [];
-    private ObservableCollection<Cabinet> _cabinets = [];
+    private ObservableCollection<JobTitleObject> _jobTitles = [];
+    private ObservableCollection<CabinetObject> _cabinets = [];
 
     public UserEditDialogViewModel(ApiService apiService)
         : base(apiService)
@@ -46,30 +46,29 @@ public class UserEditDialogViewModel : ViewModel
         set => this.RaiseAndSetIfChanged(ref _surname, value);
     }
 
-    public JobTitle SelectedJobTitle
+    public JobTitleObject SelectedJobTitle
     {
         get => _selectedJobTitle;
         set => this.RaiseAndSetIfChanged(ref _selectedJobTitle, value);
     }
 
-    public Cabinet SelectedCabinet
+    public CabinetObject SelectedCabinet
     {
         get => _selectedCabinet;
         set => this.RaiseAndSetIfChanged(ref _selectedCabinet, value);
     }
 
-    public ObservableCollection<JobTitle> JobTitles
+    public ObservableCollection<JobTitleObject> JobTitles
     {
         get => _jobTitles;
         set => this.RaiseAndSetIfChanged(ref _jobTitles, value);
     }
 
-    public ObservableCollection<Cabinet> Cabinets
+    public ObservableCollection<CabinetObject> Cabinets
     {
         get => _cabinets;
         set => this.RaiseAndSetIfChanged(ref _cabinets, value);
     }
-
 
     public ICommand SaveCommand { get; }
     public ICommand CancelCommand { get; }
@@ -79,8 +78,8 @@ public class UserEditDialogViewModel : ViewModel
         var cabinets = await ApiService.GetCabinetsAsync();
         var jobTitles = await ApiService.GetJobTitlesAsync();
 
-        JobTitles = new ObservableCollection<JobTitle>(jobTitles);
-        Cabinets = new ObservableCollection<Cabinet>(cabinets);
+        JobTitles = new ObservableCollection<JobTitleObject>(jobTitles);
+        Cabinets = new ObservableCollection<CabinetObject>(cabinets);
 
         SelectedJobTitle = _selectedJobTitle ?? JobTitles.FirstOrDefault();
         SelectedCabinet = _selectedCabinet ?? Cabinets.FirstOrDefault();

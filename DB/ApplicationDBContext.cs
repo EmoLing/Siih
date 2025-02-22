@@ -1,7 +1,7 @@
-﻿using DB.Models;
-using DB.Models.Departments;
-using DB.Models.Equipment;
-using DB.Models.Users;
+﻿using Core.Models;
+using Core.Models.Departments;
+using Core.Models.Equipment;
+using Core.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 using Microsoft.Extensions.Configuration;

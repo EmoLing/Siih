@@ -1,10 +1,9 @@
-﻿using DB.Models.Departments;
-using DB.Models.Users;
-using DynamicData;
-using ReactiveUI;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Threading.Tasks;
+using DynamicData;
+using ReactiveUI;
+using Shared.DTOs.Users;
 using UIClient.Services;
 using UIClient.ViewModels.Dialogs;
 using UIClient.Views;
@@ -13,16 +12,24 @@ namespace UIClient.ViewModels;
 
 public class UsersViewModel : ViewModel
 {
-    private ObservableCollection<User> _users = [];
-    private User _selectedUser;
+    private ObservableCollection<UserObject> _users = [];
+    private UserObject _selectedUser;
 
-    public ObservableCollection<User> Users
+    public UsersViewModel(ApiService apiService)
+    : base(apiService)
+    {
+        AddUserCommand = ReactiveCommand.CreateFromTask(AddUser);
+        DeleteUserCommand = ReactiveCommand.Create(DeleteUser);
+        EditUserCommand = ReactiveCommand.CreateFromTask(EditUser);
+    }
+
+    public ObservableCollection<UserObject> Users
     {
         get => _users;
         set => this.RaiseAndSetIfChanged(ref _users, value);
     }
 
-    public User SelectedUser
+    public UserObject SelectedUser
     {
         get => _selectedUser;
         set => this.RaiseAndSetIfChanged(ref _selectedUser, value);
@@ -32,18 +39,10 @@ public class UsersViewModel : ViewModel
     public ReactiveCommand<Unit, Unit> DeleteUserCommand { get; }
     public ReactiveCommand<Unit, Unit> EditUserCommand { get; }
 
-    public UsersViewModel(ApiService apiService)
-        : base(apiService)
-    {
-        AddUserCommand = ReactiveCommand.CreateFromTask(AddUser);
-        DeleteUserCommand = ReactiveCommand.Create(DeleteUser);
-        EditUserCommand = ReactiveCommand.CreateFromTask(EditUser);
-    }
-
     protected override async Task LoadDataAsync()
     {
         var users = await ApiService.GetUsersAsync();
-        Users = new ObservableCollection<User>(users);
+        Users = new ObservableCollection<UserObject>(users);
     }
 
     private async Task AddUser()
@@ -58,7 +57,7 @@ public class UsersViewModel : ViewModel
 
         var dialogData = (dialog.DataContext as UserEditDialogViewModel);
 
-        var newUser = new User()
+        var newUser = new UserObject()
         {
             FirstName = dialogData.FirstName,
             LastName = dialogData.LastName,
@@ -111,7 +110,7 @@ public class UsersViewModel : ViewModel
 
         var dialogData = (dialog.DataContext as UserEditDialogViewModel);
 
-        var originalUser = new User
+        var originalUser = new UserObject
         {
             Id = SelectedUser.Id,
             Name = SelectedUser.Name,
@@ -120,7 +119,7 @@ public class UsersViewModel : ViewModel
             Cabinet = SelectedUser.Cabinet
         };
 
-        var editUser = new User()
+        var editUser = new UserObject()
         {
             FirstName = dialogData.FirstName,
             LastName = dialogData.LastName,
@@ -131,7 +130,7 @@ public class UsersViewModel : ViewModel
 
         try
         {
-            var updatedUser = await ApiService.UpdateUserAsync(originalUser, editUser);
+            var updatedUser = await ApiService.UpdateUserAsync(editUser);
 
             if (updatedUser is not null)
             {

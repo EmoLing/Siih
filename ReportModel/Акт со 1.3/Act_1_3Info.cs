@@ -1,9 +1,9 @@
-﻿using DB.Models.Equipment;
-using ReportModel.Акт_со_1._3;
+﻿using ReportModel.Акт_со_1._3;
+using Shared.DTOs.Equipment;
 
 namespace ReportModel;
 
-public class Act_1_3Info(List<ComplexHardware> complexesHardware, List<ErrorPTS> errorsPTS = null) : ReportInfo
+public class Act_1_3Info(List<ComplexHardwareObject> complexesHardware, List<ErrorPTS> errorsPTS = null) : ReportInfo
 {
     public override ReportType ReportType => ReportType.Act_so_1_3;
 

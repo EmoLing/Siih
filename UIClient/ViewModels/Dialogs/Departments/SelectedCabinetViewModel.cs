@@ -1,9 +1,9 @@
-﻿using DB.Models.Departments;
+﻿using Shared.DTOs.Departments;
 
 namespace UIClient.ViewModels.Dialogs.Departments;
 
 public class SelectedCabinetViewModel
 {
-    public Cabinet Cabinet { get; set; }
+    public CabinetObject Cabinet { get; set; }
     public bool IsSelected { get; set; }
 }

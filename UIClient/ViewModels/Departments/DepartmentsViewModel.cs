@@ -1,8 +1,8 @@
-﻿using DB.Models.Departments;
-using ReactiveUI;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Threading.Tasks;
+using ReactiveUI;
+using Shared.DTOs.Departments;
 using UIClient.Services;
 using UIClient.ViewModels.Dialogs.Departments;
 using UIClient.Views.Dialogs.Departments;
@@ -11,16 +11,16 @@ namespace UIClient.ViewModels.Departments;
 
 public class DepartmentsViewModel : ViewModel
 {
-    private ObservableCollection<Department> _departments = [];
-    private Department _selectedDepartment;
+    private ObservableCollection<DepartmentObject> _departments = [];
+    private DepartmentObject _selectedDepartment;
 
-    public ObservableCollection<Department> Departments
+    public ObservableCollection<DepartmentObject> Departments
     {
         get => _departments;
         set => this.RaiseAndSetIfChanged(ref _departments, value);
     }
 
-    public Department SelectedDepartment
+    public DepartmentObject SelectedDepartment
     {
         get => _selectedDepartment;
         set => this.RaiseAndSetIfChanged(ref _selectedDepartment, value);
@@ -41,7 +41,7 @@ public class DepartmentsViewModel : ViewModel
     protected override async Task LoadDataAsync()
     {
         var departments = await ApiService.GetDepartmentsAsync();
-        Departments = new ObservableCollection<Department>(departments);
+        Departments = new ObservableCollection<DepartmentObject>(departments);
     }
 
     private async Task AddDepartment()
@@ -56,7 +56,7 @@ public class DepartmentsViewModel : ViewModel
 
         var dialogData = dialog.DataContext as DepartmentEditDialogViewModel;
 
-        var department = new Department()
+        var department = new DepartmentObject()
         {
             Name = dialogData.Name,
             Cabinets = [.. dialogData.Cabinets]

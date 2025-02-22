@@ -1,13 +1,8 @@
-﻿using DB.Models.Departments;
-using DB.Models.Equipment;
-using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ReactiveUI;
+using Shared.DTOs.Departments;
 using UIClient.Services;
 using UIClient.Views.Dialogs;
 
@@ -15,11 +10,11 @@ namespace UIClient.ViewModels.Dialogs.Departments;
 
 public class SelectDepartmentDialogViewModel : ViewModel
 {
-    private readonly Department _oldDepartment;
-    private Department _selectedDepartment;
-    private ObservableCollection<Department> _departments;
+    private readonly DepartmentObject _oldDepartment;
+    private DepartmentObject _selectedDepartment;
+    private ObservableCollection<DepartmentObject> _departments;
 
-    public SelectDepartmentDialogViewModel(ApiService apiService, Department oldDepartment)
+    public SelectDepartmentDialogViewModel(ApiService apiService, DepartmentObject oldDepartment)
         : base(apiService)
     {
         SelectCommand = ReactiveCommand.Create(SelectDepartment);
@@ -30,13 +25,13 @@ public class SelectDepartmentDialogViewModel : ViewModel
     public ICommand SelectCommand { get; }
     public ICommand CancelCommand { get; }
 
-    public Department SelectedDepartment
+    public DepartmentObject SelectedDepartment
     {
         get => _selectedDepartment;
         set => this.RaiseAndSetIfChanged(ref _selectedDepartment, value);
     }
 
-    public ObservableCollection<Department> Departments
+    public ObservableCollection<DepartmentObject> Departments
     {
         get => _departments;
         set => this.RaiseAndSetIfChanged(ref _departments, value);
@@ -45,7 +40,7 @@ public class SelectDepartmentDialogViewModel : ViewModel
     protected override async Task LoadDataAsync()
     {
         var departments = await ApiService.GetDepartmentsAsync();
-        Departments = new ObservableCollection<Department>(departments);
+        Departments = new ObservableCollection<DepartmentObject>(departments);
 
         if (_oldDepartment is not null)
             SelectedDepartment = _oldDepartment;

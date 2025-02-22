@@ -1,12 +1,8 @@
-﻿using DB.Models.Users;
-using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using System.Reactive;
-using System.Text;
 using System.Threading.Tasks;
+using ReactiveUI;
+using Shared.DTOs.Users;
 using UIClient.Services;
 using UIClient.ViewModels.Dialogs;
 using UIClient.Views;
@@ -15,16 +11,16 @@ namespace UIClient.ViewModels;
 
 public class JobTitlesViewModel : ViewModel
 {
-    private ObservableCollection<JobTitle> _jobTitles = [];
-    private JobTitle _selectedJobTitle;
+    private ObservableCollection<JobTitleObject> _jobTitles = [];
+    private JobTitleObject _selectedJobTitle;
 
-    public ObservableCollection<JobTitle> JobTitles
+    public ObservableCollection<JobTitleObject> JobTitles
     {
         get => _jobTitles;
         set => this.RaiseAndSetIfChanged(ref _jobTitles, value);
     }
 
-    public JobTitle SelectedJobTitle
+    public JobTitleObject SelectedJobTitle
     {
         get => _selectedJobTitle;
         set => this.RaiseAndSetIfChanged(ref _selectedJobTitle, value);
@@ -45,7 +41,7 @@ public class JobTitlesViewModel : ViewModel
     protected override async Task LoadDataAsync()
     {
         var jobTitles = await ApiService.GetJobTitlesAsync();
-        JobTitles = new ObservableCollection<JobTitle>(jobTitles);
+        JobTitles = new ObservableCollection<JobTitleObject>(jobTitles);
     }
 
     private async Task AddJobTitle()
@@ -60,7 +56,7 @@ public class JobTitlesViewModel : ViewModel
 
         var dialogData = (dialog.DataContext as JobTitlesEditDialogViewModel);
 
-        var newJobTitle = new JobTitle() { Name = dialogData.Name, };
+        var newJobTitle = new JobTitleObject() { Name = dialogData.Name, };
 
         try
         {

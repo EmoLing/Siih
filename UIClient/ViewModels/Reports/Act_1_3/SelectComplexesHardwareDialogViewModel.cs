@@ -1,11 +1,10 @@
-﻿using DB.Models.Equipment;
-using ReactiveUI;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reactive;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ReactiveUI;
+using Shared.DTOs.Equipment;
 using UIClient.Services;
 using UIClient.Views.Dialogs;
 
@@ -14,9 +13,9 @@ namespace UIClient.ViewModels.Reports.Act_1_3;
 public class SelectComplexesHardwareDialogViewModel : ViewModel
 {
     private ObservableCollection<SelectedComplexHardwareViewModel> _complexesHardware = [];
-    private List<ComplexHardware> _earlySelectedComplexesHardware = [];
+    private List<ComplexHardwareObject> _earlySelectedComplexesHardware = [];
 
-    public SelectComplexesHardwareDialogViewModel(ApiService apiService, List<ComplexHardware> selectedComplexesHardware)
+    public SelectComplexesHardwareDialogViewModel(ApiService apiService, List<ComplexHardwareObject> selectedComplexesHardware)
         : base(apiService)
     {
         AddComplexesHardwareCommand = ReactiveCommand.Create(AddComplexesHardware);
@@ -33,7 +32,7 @@ public class SelectComplexesHardwareDialogViewModel : ViewModel
         set => this.RaiseAndSetIfChanged(ref _complexesHardware, value);
     }
 
-    public List<ComplexHardware> SelectedComplexesHardware { get; private set; } = [];
+    public List<ComplexHardwareObject> SelectedComplexesHardware { get; private set; } = [];
 
     protected override async Task LoadDataAsync()
     {

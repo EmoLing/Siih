@@ -1,12 +1,9 @@
-﻿using DB;
+﻿using AutoMapper;
+using DB;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Server.Controllers;
 
-public abstract class MainController(ApplicationDBContext dbContext) : ControllerBase
+public abstract class MainController(IMapper mapper) : ControllerBase
 {
-    protected ApplicationDBContext DbContext = dbContext;
-
-    protected CancellationToken CancellationToken = new();
-
 }

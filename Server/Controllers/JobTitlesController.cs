@@ -1,53 +1,65 @@
-﻿using DB;
-using DB.Models.Users;
+﻿using AutoMapper;
+using Core.Models.Users;
+using Core.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Shared.DTOs.Users;
 
 namespace Server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class JobTitlesController(ApplicationDBContext dbContext) : MainController(dbContext)
+public class JobTitlesController(JobTitleService service, IMapper mapper) : MainController(mapper)
 {
-
     [HttpGet("{id}")]
-    public async Task<JobTitle> GetJobTitle(int id) => await DbContext.JobTitles.FirstOrDefaultAsync(u => u.Id == id, CancellationToken);
+    public async Task<ActionResult<JobTitleObject>> GetJobTitle(int id)
+    {
+        var jobTitle = await service.GetJobTitleByIdAsync(id);
+
+        if (jobTitle is null)
+            BadRequest(id);
+
+        var foundJobTitle = mapper.Map<JobTitleObject>(jobTitle);
+
+        return Ok(foundJobTitle);
+    }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<JobTitle>>> GetJobTitles()
+    public async Task<ActionResult<IEnumerable<JobTitleObject>>> GetJobTitles()
     {
-        return await DbContext.JobTitles.ToListAsync();
+        var coreJobTitles = await service.GetAllJobTitlesAsync();
+        var serverJobTitles = mapper.Map<IEnumerable<JobTitleObject>>(coreJobTitles);
+        return Ok(serverJobTitles);
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddJobTitle([FromBody] JobTitle jobTitle)
+    public async Task<ActionResult<JobTitleObject>> AddJobTitle([FromBody] JobTitleObject jobTitle)
     {
-        await DbContext.JobTitles.AddAsync(jobTitle, CancellationToken);
-        await DbContext.SaveChangesAsync(CancellationToken);
+        if (jobTitle is null)
+            return BadRequest("Данные пользователя не предоставлены.");
 
-        return Ok(jobTitle);
+        var coreJobTitle = mapper.Map<JobTitle>(jobTitle);
+        var createdCoreJobTitle = await service.AddJobTitleAsync(coreJobTitle);
+        var createdJobTitle = mapper.Map<JobTitleObject>(coreJobTitle);
+
+        return CreatedAtAction(nameof(GetJobTitle), new { id = createdJobTitle.Id }, createdJobTitle);
     }
 
-    [HttpPatch(Name = nameof(UpdateJobTitle))]
-    public async Task<IActionResult> UpdateJobTitle(JobTitle jobTitle)
+    [HttpPut]
+    public async Task<IActionResult> UpdateJobTitle(JobTitleObject jobTitle, CancellationToken cancellationToken)
     {
-        DbContext.JobTitles.Update(jobTitle);
-        await DbContext.SaveChangesAsync(CancellationToken);
+        if (jobTitle is null)
+            return BadRequest();
 
-        return Ok(jobTitle);
+        var coreJobTitle = mapper.Map<JobTitle>(jobTitle);
+        await service.UpdateJobTitleAsync(coreJobTitle, cancellationToken);
+
+        return NoContent();
     }
 
     [HttpDelete(Name = nameof(DeleteJobTitle))]
     public async Task<IActionResult> DeleteJobTitle(int id)
     {
-        var jobTitle = DbContext.JobTitles.Find(id);
-
-        if (jobTitle is null)
-            return NotFound(id);
-
-        DbContext.JobTitles.Remove(jobTitle);
-        await DbContext.SaveChangesAsync();
-
-        return Ok(jobTitle);
+        bool result = await service.DeleteJobTitleAsync(id);
+        return result ? NoContent() : BadRequest();
     }
 }

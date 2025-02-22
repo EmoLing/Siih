@@ -1,8 +1,8 @@
-﻿using DB.Models.Equipment;
+﻿using Shared.DTOs.Equipment;
 
 namespace UIClient.ViewModels.Reports.Act_1_3;
 public class SelectedComplexHardwareViewModel
 {
-    public ComplexHardware ComplexHardware { get; set; }
+    public ComplexHardwareObject ComplexHardware { get; set; }
     public bool IsSelected { get; set; }
 }

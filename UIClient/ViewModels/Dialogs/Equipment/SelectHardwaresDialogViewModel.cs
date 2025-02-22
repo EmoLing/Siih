@@ -1,13 +1,10 @@
-﻿using DB.Models.Equipment;
-using DB.Models.Users;
-using ReactiveUI;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ReactiveUI;
+using Shared.DTOs.Equipment;
 using UIClient.Services;
 using UIClient.Views.Dialogs;
 
@@ -16,9 +13,9 @@ namespace UIClient.ViewModels.Dialogs.Equipment;
 public class SelectHardwaresDialogViewModel : ViewModel
 {
     private ObservableCollection<SelectedHardwareViewModel> _hardwares = [];
-    private List<Hardware> _earlySelectedHardwares = [];
+    private List<HardwareObject> _earlySelectedHardwares = [];
 
-    public SelectHardwaresDialogViewModel(ApiService apiService, List<Hardware> selectedHardwares)
+    public SelectHardwaresDialogViewModel(ApiService apiService, List<HardwareObject> selectedHardwares)
         : base(apiService)
     {
         AddHardwaresCommand = ReactiveCommand.Create(AddHardwares);
@@ -35,7 +32,7 @@ public class SelectHardwaresDialogViewModel : ViewModel
         set => this.RaiseAndSetIfChanged(ref _hardwares, value);
     }
 
-    public List<Hardware> SelectedHardwares { get; private set; } = [];
+    public List<HardwareObject> SelectedHardwares { get; private set; } = [];
 
     protected override async Task LoadDataAsync()
     {

@@ -1,12 +1,7 @@
 ﻿using NPOI.XWPF.UserModel;
 using ReportGenerator.Strategy;
 using ReportModel;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReportGenerator;
 
@@ -49,7 +44,7 @@ public static class ReportGenerator
                 if (row is null)
                 {
                     row = table.CreateRow();
-                    row.AddNewTableCell(); // При создании строки создает на одну ячейку меньше, нада добавлять
+                    row.AddNewTableCell(); // При создании строки создает на одну ячейку меньше, нужно добавлять
                 }
 
                 report.FillTableRow(row, rowInfo);

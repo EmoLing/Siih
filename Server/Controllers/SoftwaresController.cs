@@ -1,52 +1,65 @@
-﻿using DB;
-using DB.Models.Equipment;
+﻿using AutoMapper;
+using Core.Models.Equipment;
+using Core.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Shared.DTOs.Equipment;
 
 namespace Server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class SoftwaresController(ApplicationDBContext dbContext) : MainController(dbContext)
+public class SoftwaresController(SoftwareService service, IMapper mapper) : MainController(mapper)
 {
     [HttpGet("{id}")]
-    public async Task<Software> GetSoftware(int id) => await DbContext.Softwares.FirstOrDefaultAsync(s => s.Id == id, CancellationToken);
+    public async Task<ActionResult<SoftwareObject>> GetSoftware(int id)
+    {
+        var software = await service.GetSoftwareByIdAsync(id);
+
+        if (software is null)
+            BadRequest(id);
+
+        var foundSoftware = mapper.Map<SoftwareObject>(software);
+
+        return Ok(foundSoftware);
+    }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Software>>> GetSoftwares()
+    public async Task<ActionResult<IEnumerable<SoftwareObject>>> GetSoftwares()
     {
-        return await DbContext.Softwares.Include(s => s.Hardwares).ToListAsync();
+        var coreSoftwares = await service.GetAllSoftwaresAsync();
+        var serverSoftwares = mapper.Map<IEnumerable<SoftwareObject>>(coreSoftwares);
+        return Ok(serverSoftwares);
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddSoftware([FromBody] Software software)
+    public async Task<ActionResult<SoftwareObject>> AddSoftware([FromBody] SoftwareObject software)
     {
-        await DbContext.Softwares.AddAsync(software, CancellationToken);
-        await DbContext.SaveChangesAsync(CancellationToken);
+        if (software is null)
+            return BadRequest("Данные пользователя не предоставлены.");
 
-        return Ok(software);
+        var coreSoftware = mapper.Map<Software>(software);
+        var createdCoreSoftware = await service.AddSoftwareAsync(coreSoftware);
+        var createdSoftware = mapper.Map<SoftwareObject>(coreSoftware);
+
+        return CreatedAtAction(nameof(GetSoftware), new { id = createdSoftware.Id }, createdSoftware);
     }
 
-    [HttpPatch(Name = nameof(UpdateSoftware))]
-    public async Task<IActionResult> UpdateSoftware(Software software)
+    [HttpPut]
+    public async Task<IActionResult> UpdateSoftware(SoftwareObject software, CancellationToken cancellationToken)
     {
-        DbContext.Softwares.Update(software);
-        await DbContext.SaveChangesAsync(CancellationToken);
+        if (software is null)
+            return BadRequest();
 
-        return Ok(software);
+        var coreSoftware = mapper.Map<Software>(software);
+        await service.UpdateSoftwareAsync(coreSoftware, cancellationToken);
+
+        return NoContent();
     }
 
     [HttpDelete(Name = nameof(DeleteSoftware))]
     public async Task<IActionResult> DeleteSoftware(int id)
     {
-        var software = DbContext.Softwares.Find(id);
-
-        if (software is null)
-            return NotFound(id);
-
-        DbContext.Softwares.Remove(software);
-        await DbContext.SaveChangesAsync();
-
-        return Ok(software);
+        bool result = await service.DeleteSoftwareAsync(id);
+        return result ? NoContent() : BadRequest();
     }
 }

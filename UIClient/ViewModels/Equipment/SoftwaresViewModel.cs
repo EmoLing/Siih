@@ -1,31 +1,24 @@
-﻿using DB.Models.Equipment;
-using DB.Models.Users;
-using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using System.Reactive;
-using System.Text;
 using System.Threading.Tasks;
+using ReactiveUI;
+using Shared.DTOs.Equipment;
 using UIClient.Services;
-using UIClient.ViewModels.Dialogs;
-using UIClient.Views;
 
 namespace UIClient.ViewModels.Equipment;
 
 public class SoftwaresViewModel : ViewModel
 {
-    private ObservableCollection<Software> _softwares = [];
-    private Software _selectedSoftware;
+    private ObservableCollection<SoftwareObject> _softwares = [];
+    private SoftwareObject _selectedSoftware;
 
-    public ObservableCollection<Software> Softwares
+    public ObservableCollection<SoftwareObject> Softwares
     {
         get => _softwares;
         set => this.RaiseAndSetIfChanged(ref _softwares, value);
     }
 
-    public Software SelectedSoftware
+    public SoftwareObject SelectedSoftware
     {
         get => _selectedSoftware;
         set => this.RaiseAndSetIfChanged(ref _selectedSoftware, value);
@@ -46,7 +39,7 @@ public class SoftwaresViewModel : ViewModel
     protected override async Task LoadDataAsync()
     {
         var softwares = await ApiService.GetSoftwaresAsync();
-        Softwares = new ObservableCollection<Software>(softwares);
+        Softwares = new ObservableCollection<SoftwareObject>(softwares);
     }
 
     private Task AddSoftware()

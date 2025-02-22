@@ -1,33 +1,26 @@
-﻿using DB.Models.Equipment;
-using DB.Models.Users;
-using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using System.Reactive;
-using System.Text;
 using System.Threading.Tasks;
+using ReactiveUI;
+using Shared.DTOs.Equipment;
 using UIClient.Services;
-using UIClient.ViewModels.Dialogs;
 using UIClient.ViewModels.Dialogs.Equipment;
-using UIClient.Views;
 using UIClient.Views.Dialogs.Equipment;
 
 namespace UIClient.ViewModels.Equipment;
 
 public class ComplexesHardwareViewModel : ViewModel
 {
-    private ObservableCollection<ComplexHardware> _complexesHardware = [];
-    private ComplexHardware _selectedComplexHardware;
+    private ObservableCollection<ComplexHardwareObject> _complexesHardware = [];
+    private ComplexHardwareObject _selectedComplexHardware;
 
-    public ObservableCollection<ComplexHardware> ComplexesHardware
+    public ObservableCollection<ComplexHardwareObject> ComplexesHardware
     {
         get => _complexesHardware;
         set => this.RaiseAndSetIfChanged(ref _complexesHardware, value);
     }
 
-    public ComplexHardware SelectedComplexHardware
+    public ComplexHardwareObject SelectedComplexHardware
     {
         get => _selectedComplexHardware;
         set => this.RaiseAndSetIfChanged(ref _selectedComplexHardware, value);
@@ -48,7 +41,7 @@ public class ComplexesHardwareViewModel : ViewModel
     protected override async Task LoadDataAsync()
     {
         var complexesHardware = await ApiService.GetComplexesHardwareAsync();
-        ComplexesHardware = new ObservableCollection<ComplexHardware>(complexesHardware);
+        ComplexesHardware = new ObservableCollection<ComplexHardwareObject>(complexesHardware);
     }
 
     private async Task AddComplexHardware()
@@ -63,7 +56,7 @@ public class ComplexesHardwareViewModel : ViewModel
 
         var dialogData = (dialog.DataContext as ComplexHardwareEditDialogViewModel);
 
-        var complexHardware = new ComplexHardware()
+        var complexHardware = new ComplexHardwareObject()
         {
             Name = dialogData.Name,
             InventoryNumber = dialogData.InventoryNumber,

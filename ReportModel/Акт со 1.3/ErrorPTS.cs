@@ -1,10 +1,10 @@
-﻿using DB.Models.Equipment;
+﻿using Shared.DTOs.Equipment;
 
 namespace ReportModel.Акт_со_1._3;
 
 public class ErrorPTS
 {
-    public Hardware Hardware { get; set; }
+    public HardwareObject Hardware { get; set; }
 
     public string IncomingInspection { get; set; }
 
