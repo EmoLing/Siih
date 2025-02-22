@@ -32,13 +32,18 @@ public class ApiService
         return createdUser;
     }
 
-    public async Task<UserObject> UpdateUserAsync(UserObject user)
+    public async Task UpdateUserAsync(UserObject user)
     {
-        var response = await _httpClient.PutAsJsonAsync("api/hardwares", user, _cancellationToken);
+        var response = await _httpClient.PutAsJsonAsync("api/users", user, _cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task<bool> DeleteUserAsync(int userId)
+    {
+        var response = await _httpClient.DeleteAsync($"api/users/{userId}", _cancellationToken);
         response.EnsureSuccessStatusCode();
 
-        var createdUser = await response.Content.ReadFromJsonAsync<UserObject>(_cancellationToken);
-        return createdUser;
+        return response.StatusCode == System.Net.HttpStatusCode.OK;
     }
     #endregion
 
@@ -81,6 +86,20 @@ public class ApiService
 
         var createdJobTitle = await response.Content.ReadFromJsonAsync<JobTitleObject>(_cancellationToken);
         return createdJobTitle;
+    }
+
+    public async Task UpdateJobTitleAsync(JobTitleObject user)
+    {
+        var response = await _httpClient.PutAsJsonAsync("api/jobtitles", user, _cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task<bool> DeleteJobTitleAsync(int jobTitleId)
+    {
+        var response = await _httpClient.DeleteAsync($"api/jobtitles/{jobTitleId}", _cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        return response.StatusCode == System.Net.HttpStatusCode.OK;
     }
     #endregion
 

@@ -12,6 +12,16 @@ public class SoftwaresViewModel : ViewModel
     private ObservableCollection<SoftwareObject> _softwares = [];
     private SoftwareObject _selectedSoftware;
 
+    public SoftwaresViewModel(ApiService apiService, MainWindowViewModel mainWindowViewModel)
+        : base(apiService, mainWindowViewModel)
+    {
+        AddCommand = ReactiveCommand.CreateFromTask(AddSoftware);
+        DeleteCommand = ReactiveCommand.Create(DeleteSoftware);
+        EditCommand = ReactiveCommand.CreateFromTask(EditSoftware);
+
+        MainWindowViewModel.SetTitle("ПО");
+    }
+
     public ObservableCollection<SoftwareObject> Softwares
     {
         get => _softwares;
@@ -27,14 +37,6 @@ public class SoftwaresViewModel : ViewModel
     public ReactiveCommand<Unit, Unit> AddCommand { get; }
     public ReactiveCommand<Unit, Unit> DeleteCommand { get; }
     public ReactiveCommand<Unit, Unit> EditCommand { get; }
-
-    public SoftwaresViewModel(ApiService apiService)
-        : base(apiService)
-    {
-        AddCommand = ReactiveCommand.CreateFromTask(AddSoftware);
-        DeleteCommand = ReactiveCommand.Create(DeleteSoftware);
-        EditCommand = ReactiveCommand.CreateFromTask(EditSoftware);
-    }
 
     protected override async Task LoadDataAsync()
     {

@@ -51,15 +51,15 @@ public class UsersController(UserService service, IMapper mapper) : MainControll
             return BadRequest();
 
         var coreUser = mapper.Map<User>(user);
-        await service.UpdateUserAsync(coreUser, cancellationToken);
+        var createdCoreUser = await service.UpdateUserAsync(coreUser, cancellationToken);
 
-        return NoContent();
+        return createdCoreUser is not null ? Ok() : BadRequest();
     }
 
-    [HttpDelete(Name = nameof(DeleteUser))]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(int id)
     {
         bool result = await service.DeleteUserAsync(id);
-        return result ? NoContent() : BadRequest();
+        return result ? Ok() : BadRequest();
     }
 }

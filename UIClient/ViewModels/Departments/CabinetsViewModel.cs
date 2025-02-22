@@ -14,6 +14,16 @@ public class CabinetsViewModel : ViewModel
     private ObservableCollection<CabinetObject> _cabinets = [];
     private CabinetObject _selectedCabinet;
 
+    public CabinetsViewModel(ApiService apiService, MainWindowViewModel mainWindowViewModel)
+        : base(apiService, mainWindowViewModel)
+    {
+        AddCommand = ReactiveCommand.CreateFromTask(AddCabinet);
+        DeleteCommand = ReactiveCommand.Create(DeleteCabinet);
+        EditCommand = ReactiveCommand.CreateFromTask(EditCabinet);
+
+        MainWindowViewModel.SetTitle("Кабинеты");
+    }
+
     public ObservableCollection<CabinetObject> Cabinets
     {
         get => _cabinets;
@@ -29,14 +39,6 @@ public class CabinetsViewModel : ViewModel
     public ReactiveCommand<Unit, Unit> AddCommand { get; }
     public ReactiveCommand<Unit, Unit> DeleteCommand { get; }
     public ReactiveCommand<Unit, Unit> EditCommand { get; }
-
-    public CabinetsViewModel(ApiService apiService)
-        : base(apiService)
-    {
-        AddCommand = ReactiveCommand.CreateFromTask(AddCabinet);
-        DeleteCommand = ReactiveCommand.Create(DeleteCabinet);
-        EditCommand = ReactiveCommand.CreateFromTask(EditCabinet);
-    }
 
     protected override async Task LoadDataAsync()
     {

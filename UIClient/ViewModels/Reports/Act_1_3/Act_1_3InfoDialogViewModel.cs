@@ -18,7 +18,8 @@ public class Act_1_3InfoDialogViewModel : ViewModel
 
     private ObservableCollection<ErrorPTS> _errorsPTS;
 
-    public Act_1_3InfoDialogViewModel(ApiService apiService) : base(apiService)
+    public Act_1_3InfoDialogViewModel(ApiService apiService, MainWindowViewModel mainWindowViewModel)
+        : base(apiService, mainWindowViewModel)
     {
         CreateErrorsPTSCommand = ReactiveCommand.Create<ReportHardwareViewModel>(CreateErrorsPTS);
         RemoveErrorPTSCommand = ReactiveCommand.Create<ErrorPTS>(RemoveErrorPTS);
@@ -26,6 +27,8 @@ public class Act_1_3InfoDialogViewModel : ViewModel
         GenerateReportCommand = ReactiveCommand.Create(GenerateReport);
         SelectComplexesHardwaresCommand = ReactiveCommand.Create(SelectComplexesHardwares);
         RemoveComplexesHardwaresCommand = ReactiveCommand.Create<ReportHardwareViewModel>(RemoveComplexesHardwares);
+
+        MainWindowViewModel.SetTitle("Отчеты");
     }
 
     public ICommand GenerateReportCommand { get; }

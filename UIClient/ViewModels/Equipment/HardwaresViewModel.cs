@@ -11,6 +11,16 @@ public class HardwaresViewModel : ViewModel
     private ObservableCollection<HardwareObject> _hardwares = [];
     private HardwareObject _selectedHardware;
 
+    public HardwaresViewModel(ApiService apiService, MainWindowViewModel mainWindowViewModel)
+        : base(apiService, mainWindowViewModel)
+    {
+        AddCommand = ReactiveCommand.CreateFromTask(AddHardware);
+        DeleteCommand = ReactiveCommand.Create(DeleteHardware);
+        EditCommand = ReactiveCommand.CreateFromTask(EditHardware);
+
+        MainWindowViewModel.SetTitle("Оборудование");
+    }
+
     public ObservableCollection<HardwareObject> Hardwares
     {
         get => _hardwares;
@@ -26,14 +36,6 @@ public class HardwaresViewModel : ViewModel
     public ReactiveCommand<Unit, Unit> AddCommand { get; }
     public ReactiveCommand<Unit, Unit> DeleteCommand { get; }
     public ReactiveCommand<Unit, Unit> EditCommand { get; }
-
-    public HardwaresViewModel(ApiService apiService)
-        : base(apiService)
-    {
-        AddCommand = ReactiveCommand.CreateFromTask(AddHardware);
-        DeleteCommand = ReactiveCommand.Create(DeleteHardware);
-        EditCommand = ReactiveCommand.CreateFromTask(EditHardware);
-    }
 
     protected override async Task LoadDataAsync()
     {

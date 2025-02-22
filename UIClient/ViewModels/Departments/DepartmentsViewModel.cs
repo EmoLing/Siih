@@ -14,6 +14,16 @@ public class DepartmentsViewModel : ViewModel
     private ObservableCollection<DepartmentObject> _departments = [];
     private DepartmentObject _selectedDepartment;
 
+    public DepartmentsViewModel(ApiService apiService, MainWindowViewModel mainWindowViewModel)
+        : base(apiService, mainWindowViewModel)
+    {
+        AddCommand = ReactiveCommand.CreateFromTask(AddDepartment);
+        DeleteCommand = ReactiveCommand.Create(DeleteDepartment);
+        EditCommand = ReactiveCommand.CreateFromTask(EditDepartment);
+
+        MainWindowViewModel.SetTitle("Отделы");
+    }
+
     public ObservableCollection<DepartmentObject> Departments
     {
         get => _departments;
@@ -29,14 +39,6 @@ public class DepartmentsViewModel : ViewModel
     public ReactiveCommand<Unit, Unit> AddCommand { get; }
     public ReactiveCommand<Unit, Unit> DeleteCommand { get; }
     public ReactiveCommand<Unit, Unit> EditCommand { get; }
-
-    public DepartmentsViewModel(ApiService apiService)
-        : base(apiService)
-    {
-        AddCommand = ReactiveCommand.CreateFromTask(AddDepartment);
-        DeleteCommand = ReactiveCommand.Create(DeleteDepartment);
-        EditCommand = ReactiveCommand.CreateFromTask(EditDepartment);
-    }
 
     protected override async Task LoadDataAsync()
     {

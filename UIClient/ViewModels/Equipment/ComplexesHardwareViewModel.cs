@@ -14,6 +14,16 @@ public class ComplexesHardwareViewModel : ViewModel
     private ObservableCollection<ComplexHardwareObject> _complexesHardware = [];
     private ComplexHardwareObject _selectedComplexHardware;
 
+    public ComplexesHardwareViewModel(ApiService apiService, MainWindowViewModel mainWindowViewModel)
+        : base(apiService, mainWindowViewModel)
+    {
+        AddCommand = ReactiveCommand.CreateFromTask(AddComplexHardware);
+        DeleteCommand = ReactiveCommand.Create(DeleteComplexHardware);
+        EditCommand = ReactiveCommand.CreateFromTask(EditComplexHardware);
+
+        MainWindowViewModel.SetTitle("Комплекс");
+    }
+
     public ObservableCollection<ComplexHardwareObject> ComplexesHardware
     {
         get => _complexesHardware;
@@ -29,14 +39,6 @@ public class ComplexesHardwareViewModel : ViewModel
     public ReactiveCommand<Unit, Unit> AddCommand { get; }
     public ReactiveCommand<Unit, Unit> DeleteCommand { get; }
     public ReactiveCommand<Unit, Unit> EditCommand { get; }
-
-    public ComplexesHardwareViewModel(ApiService apiService)
-        : base(apiService)
-    {
-        AddCommand = ReactiveCommand.CreateFromTask(AddComplexHardware);
-        DeleteCommand = ReactiveCommand.Create(DeleteComplexHardware);
-        EditCommand = ReactiveCommand.CreateFromTask(EditComplexHardware);
-    }
 
     protected override async Task LoadDataAsync()
     {

@@ -19,7 +19,8 @@
 		<ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
 			<DataGrid ItemsSource="{Binding JobTitles}" IsReadOnly="True"
 					  GridLinesVisibility="All"
-					  BorderThickness="1" BorderBrush="Gray">
+					  BorderThickness="1" BorderBrush="Gray"
+					  SelectedItem="{Binding SelectedJobTitle}">
 				<DataGrid.Styles>
 					<Style Selector="DataGridColumnHeader">
 						<Setter Property="Background" Value="LightGray" />

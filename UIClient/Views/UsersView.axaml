@@ -12,9 +12,15 @@
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 		<StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-			<Button Content="Добавить" Command="{Binding AddUserCommand}" Margin="5"/>
-			<Button Content="Удалить" Command="{Binding DeleteUserCommand}" Margin="5"/>
-			<Button Content="Изменить" Command="{Binding EditUserCommand}" Margin="5"/>
+			<Button ToolTip.Tip="Добавить" Background="White" Command="{Binding AddUserCommand}" Margin="0 0 0 5">
+				<Image Width="24" Height="24" Source="/Assets/add.png" />
+			</Button>
+			<Button ToolTip.Tip="Изменить" Background="White" Command="{Binding EditUserCommand}" Margin="0 0 0 5">
+				<Image Width="24" Height="24" Source="/Assets/edit.png" />
+			</Button>
+			<Button ToolTip.Tip="Удалить" Background="White" Command="{Binding DeleteUserCommand}" Margin="0 0 0 5">
+				<Image Width="24" Height="24" Source="/Assets/delete.png" />
+			</Button>
 		</StackPanel>
 		<ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
 			<DataGrid ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}" IsReadOnly="True"

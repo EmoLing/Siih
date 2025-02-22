@@ -6,6 +6,7 @@ using System.Windows.Input;
 using ReactiveUI;
 using Shared.DTOs.Equipment;
 using UIClient.Services;
+using UIClient.Views;
 using UIClient.Views.Dialogs;
 
 namespace UIClient.ViewModels.Reports.Act_1_3;
@@ -23,6 +24,7 @@ public class SelectComplexesHardwareDialogViewModel : ViewModel
         _earlySelectedComplexesHardware = selectedComplexesHardware;
     }
 
+    internal IView View { get; init; }
     public ICommand CancelCommand { get; }
     public ICommand AddComplexesHardwareCommand { get; }
 

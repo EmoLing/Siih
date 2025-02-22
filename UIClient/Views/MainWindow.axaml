@@ -4,26 +4,48 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		xmlns:local="clr-namespace:UIClient;assembly=UIClient"
         x:Class="UIClient.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="UIClient">
+        Title="{Binding Title}">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 	<DockPanel>
-		<StackPanel DockPanel.Dock="Left" Width="200" Background="LightGray">
-			<Button Content="Пользователи" Command="{Binding ShowUsersCommand}" Margin="10"/>
-			<Button Content="Должности" Command="{Binding ShowJobTitlesCommand}" Margin="10"/>
-			<Button Content="ПО" Command="{Binding ShowSoftwaresCommand}" Margin="10"/>
-			<Button Content="Оборудование" Command="{Binding ShowHardwaresCommand}" Margin="10"/>
-			<Button Content="Комплекс" Command="{Binding ShowComplexesHardwareCommand}" Margin="10"/>
-			<Button Content="Кабинеты" Command="{Binding ShowCabinetsCommand}" Margin="10"/>
-			<Button Content="Отделы" Command="{Binding ShowDepartmentsCommand}" Margin="10"/>
-			<Button Content="Отчет" Command="{Binding ShowReportDialogCommand}" Margin="10"/>
+		<StackPanel DockPanel.Dock="Left" Width="200" Background="#d6e7ff">
+			<Button ToolTip.Tip="Пользователи" Command="{Binding ShowUsersCommand}" Margin="10">
+				<Image Width="32" Height="32" Source="avares://UIClient/Assets/users.png"/>
+			</Button>
+
+			<Button ToolTip.Tip="Должности" Command="{Binding ShowJobTitlesCommand}" Margin="10">
+				<Image Width="32" Height="32" Source="avares://UIClient/Assets/jobtitle.png"/>
+			</Button>
+
+			<Button ToolTip.Tip="Отделы" Command="{Binding ShowDepartmentsCommand}" Margin="10">
+				<Image Width="32" Height="32" Source="avares://UIClient/Assets/departments.png"/>
+			</Button>
+			
+			<Button ToolTip.Tip="Кабинеты" Command="{Binding ShowCabinetsCommand}" Margin="10">
+				<Image Width="32" Height="32" Source="avares://UIClient/Assets/cabinet.png"/>
+			</Button>
+			
+			<Button ToolTip.Tip="ПО" Command="{Binding ShowSoftwaresCommand}" Margin="10">
+				<Image Width="32" Height="32" Source="avares://UIClient/Assets/software.png"/>
+			</Button>
+
+			<Button ToolTip.Tip="Оборудование" Command="{Binding ShowHardwaresCommand}" Margin="10">
+				<Image Width="32" Height="32" Source="avares://UIClient/Assets/hardware.png"/>
+			</Button>
+
+			<Button ToolTip.Tip="Комплекс" Command="{Binding ShowComplexesHardwareCommand}" Margin="10">
+				<Image Width="32" Height="32" Source="avares://UIClient/Assets/complex.png"/>
+			</Button>
+
+			<Button ToolTip.Tip="Отчеты" Command="{Binding ShowReportDialogCommand}" Margin="10">
+				<Image Width="32" Height="32" Source="avares://UIClient/Assets/report.png"/>
+			</Button>
 		</StackPanel>
 		<ContentControl Content="{Binding CurrentContent}" />
 	</DockPanel>
