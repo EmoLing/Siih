@@ -28,7 +28,17 @@ public partial class App : Application
     {
         var services = new ServiceCollection();
         services.AddSingleton<HttpClient>(sp => new HttpClient() { BaseAddress = new System.Uri("https://localhost:7208") });
-        services.AddSingleton<ApiService>();
+
+        services.AddSingleton<UsersApiService>();
+        services.AddSingleton<JobTitlesApiService>();
+        services.AddSingleton<DepartmentsApiService>();
+        services.AddSingleton<CabinetsApiService>();
+        services.AddSingleton<SoftwaresApiService>();
+        services.AddSingleton<HardwaresApiService>();
+        services.AddSingleton<ComplexesHardwareApiServices>();
+
+        services.AddSingleton<MasterApiService>();
+
         services.AddTransient<MainWindowViewModel>();
 
         services.AddTransient<UsersViewModel>();

@@ -14,7 +14,7 @@ public class SelectDepartmentDialogViewModel : ViewModel
     private DepartmentObject _selectedDepartment;
     private ObservableCollection<DepartmentObject> _departments;
 
-    public SelectDepartmentDialogViewModel(ApiService apiService, DepartmentObject oldDepartment)
+    public SelectDepartmentDialogViewModel(MasterApiService apiService, DepartmentObject oldDepartment)
         : base(apiService)
     {
         SelectCommand = ReactiveCommand.Create(SelectDepartment);
@@ -39,7 +39,7 @@ public class SelectDepartmentDialogViewModel : ViewModel
 
     protected override async Task LoadDataAsync()
     {
-        var departments = await ApiService.GetDepartmentsAsync();
+        var departments = await ApiService.DepartmentsApiService.GetDepartmentsAsync();
         Departments = new ObservableCollection<DepartmentObject>(departments);
 
         if (_oldDepartment is not null)

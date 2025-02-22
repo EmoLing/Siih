@@ -13,7 +13,7 @@ internal class CabinetEditDialogViewModel : ViewModel
     private string _name;
     private DepartmentObject _department;
 
-    public CabinetEditDialogViewModel(ApiService apiService)
+    public CabinetEditDialogViewModel(MasterApiService apiService)
         : base(apiService)
     {
         SaveCommand = ReactiveCommand.Create(Save);

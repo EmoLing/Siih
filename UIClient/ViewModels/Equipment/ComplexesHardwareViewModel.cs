@@ -14,7 +14,7 @@ public class ComplexesHardwareViewModel : ViewModel
     private ObservableCollection<ComplexHardwareObject> _complexesHardware = [];
     private ComplexHardwareObject _selectedComplexHardware;
 
-    public ComplexesHardwareViewModel(ApiService apiService, MainWindowViewModel mainWindowViewModel)
+    public ComplexesHardwareViewModel(MasterApiService apiService, MainWindowViewModel mainWindowViewModel)
         : base(apiService, mainWindowViewModel)
     {
         AddCommand = ReactiveCommand.CreateFromTask(AddComplexHardware);
@@ -42,7 +42,7 @@ public class ComplexesHardwareViewModel : ViewModel
 
     protected override async Task LoadDataAsync()
     {
-        var complexesHardware = await ApiService.GetComplexesHardwareAsync();
+        var complexesHardware = await ApiService.ComplexesHardwareApiService.GetComplexesHardwareAsync();
         ComplexesHardware = new ObservableCollection<ComplexHardwareObject>(complexesHardware);
     }
 
@@ -69,7 +69,7 @@ public class ComplexesHardwareViewModel : ViewModel
 
         try
         {
-            var createdComplexHardware = await ApiService.AddComplexHardwareAsync(complexHardware);
+            var createdComplexHardware = await ApiService.ComplexesHardwareApiService.AddComplexHardwareAsync(complexHardware);
 
             if (createdComplexHardware is not null)
             {

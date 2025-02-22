@@ -16,7 +16,7 @@ public class JobTitlesViewModel : ViewModel
     private ObservableCollection<JobTitleObject> _jobTitles = [];
     private JobTitleObject _selectedJobTitle;
 
-    public JobTitlesViewModel(ApiService apiService, MainWindowViewModel mainWindowViewModel)
+    public JobTitlesViewModel(MasterApiService apiService, MainWindowViewModel mainWindowViewModel)
         : base(apiService, mainWindowViewModel)
     {
         AddCommand = ReactiveCommand.CreateFromTask(AddJobTitle);
@@ -44,7 +44,7 @@ public class JobTitlesViewModel : ViewModel
 
     protected override async Task LoadDataAsync()
     {
-        var jobTitles = await ApiService.GetJobTitlesAsync();
+        var jobTitles = await ApiService.JobTitlesApiService.GetJobTitlesAsync();
         JobTitles = new ObservableCollection<JobTitleObject>(jobTitles);
     }
 
@@ -64,7 +64,7 @@ public class JobTitlesViewModel : ViewModel
 
         try
         {
-            var createdUser = await ApiService.AddJobTitleAsync(newJobTitle);
+            var createdUser = await ApiService.JobTitlesApiService.AddJobTitleAsync(newJobTitle);
 
             if (createdUser is not null)
             {
@@ -81,7 +81,7 @@ public class JobTitlesViewModel : ViewModel
     {
         try
         {
-            bool result = await ApiService.DeleteJobTitleAsync(SelectedJobTitle.Id);
+            bool result = await ApiService.JobTitlesApiService.DeleteJobTitleAsync(SelectedJobTitle.Id);
 
             if (result)
             {
@@ -123,7 +123,7 @@ public class JobTitlesViewModel : ViewModel
 
         try
         {
-            await ApiService.UpdateJobTitleAsync(editJobTitle);
+            await ApiService.JobTitlesApiService.UpdateJobTitleAsync(editJobTitle);
             JobTitles.Replace(SelectedJobTitle, editJobTitle);
             SelectedJobTitle = editJobTitle;
         }

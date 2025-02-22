@@ -15,7 +15,7 @@ public class SelectCabinetsDialogViewModel : ViewModel
     private ObservableCollection<SelectedCabinetViewModel> _cabinets = [];
     private readonly List<CabinetObject> _earlySelectedCabinets = [];
 
-    public SelectCabinetsDialogViewModel(ApiService apiService, List<CabinetObject> selectedCabinets)
+    public SelectCabinetsDialogViewModel(MasterApiService apiService, List<CabinetObject> selectedCabinets)
         : base(apiService)
     {
         AddCabinetsCommand = ReactiveCommand.Create(AddCabinets);
@@ -36,7 +36,7 @@ public class SelectCabinetsDialogViewModel : ViewModel
 
     protected override async Task LoadDataAsync()
     {
-        var cabinets = await ApiService.GetCabinetsAsync();
+        var cabinets = await ApiService.CabinetsApiService.GetCabinetsAsync();
         var availableCabinets = cabinets.Where(c => c.Department is null && !_earlySelectedCabinets.Contains(c));
 
         Cabinets = new ObservableCollection<SelectedCabinetViewModel>(availableCabinets

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -22,6 +23,7 @@ public class SelectItemsViewModel : ViewModelBase
     internal IView View { get; init; }
     public ICommand CancelCommand { get; }
     public ICommand AddCommand { get; }
+    public Action LoadAction;
 
     public ObservableCollection<SelectedItemViewModel> Items
     {

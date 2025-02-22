@@ -1,4 +1,6 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reactive;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using DynamicData;
@@ -6,8 +8,10 @@ using ReactiveUI;
 using Shared.DTOs.Equipment;
 using Shared.DTOs.Users;
 using UIClient.Services;
+using UIClient.ViewModels.Dialogs.SelectDialog;
 using UIClient.Views.Dialogs;
 using UIClient.Views.Dialogs.Equipment;
+using UIClient.Views.Dialogs.SelectDialog;
 
 namespace UIClient.ViewModels.Dialogs.Equipment;
 
@@ -19,13 +23,14 @@ public class ComplexHardwareEditDialogViewModel : ViewModel
     private ComplexHardwareType _type;
     private ObservableCollection<HardwareObject> _hardwares = [];
 
-    public ComplexHardwareEditDialogViewModel(ApiService apiService, ComplexHardwareObject complexHardware)
+    public ComplexHardwareEditDialogViewModel(MasterApiService apiService, ComplexHardwareObject complexHardware)
         : base(apiService)
     {
         SaveCommand = ReactiveCommand.Create(Save);
         CancelCommand = ReactiveCommand.Create(Cancel);
         AddHardwareCommand = ReactiveCommand.Create(AddHardware);
         CreateHardwareCommand = ReactiveCommand.Create(CreateHardware);
+        SelectUserCommand = ReactiveCommand.Create(SelectUser);
 
         if (complexHardware is not null)
         {
@@ -41,6 +46,7 @@ public class ComplexHardwareEditDialogViewModel : ViewModel
     public ICommand CancelCommand { get; }
     public ICommand AddHardwareCommand { get; }
     public ICommand CreateHardwareCommand { get; }
+    public ICommand SelectUserCommand { get; }
 
     public string Name
     {
@@ -97,6 +103,36 @@ public class ComplexHardwareEditDialogViewModel : ViewModel
 
     private void CreateHardware()
     {
+    }
+
+    private async Task SelectUser()
+    {
+        var users = await ApiService.UsersApiService.GetUsersAsync();
+
+        var filteredUsers = users.Where(u => u.ComplexHardwares is null || u.ComplexHardwares.Count == 0)
+            .Select(u => new SelectedItemViewModel() { TransferObject = u }).ToList();
+
+        var selectDialog = new SelectItemsTemplate();
+        var selectDialogVM = new SelectItemsViewModel
+        {
+            Items = new ObservableCollection<SelectedItemViewModel>(filteredUsers),
+            View = selectDialog
+        };
+
+        selectDialog.DataContext = selectDialogVM;
+
+        bool result = await selectDialog.ShowDialog<bool>(App.Owner);
+
+        if (!result)
+            return;
+
+        var selectedItem = (selectDialog.DataContext as SelectItemsViewModel)?.SelectedSelectedItems.FirstOrDefault();
+        var user = await ApiService.UsersApiService.GetUserAsync(selectedItem.Id);
+
+        if (user is null)
+            return;
+
+        User = user;
     }
 
     private void CloseDialog(bool result)

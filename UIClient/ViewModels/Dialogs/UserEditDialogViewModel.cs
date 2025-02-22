@@ -21,7 +21,7 @@ public class UserEditDialogViewModel : ViewModel
     private ObservableCollection<JobTitleObject> _jobTitles = [];
     private ObservableCollection<CabinetObject> _cabinets = [];
 
-    public UserEditDialogViewModel(ApiService apiService)
+    public UserEditDialogViewModel(MasterApiService apiService)
         : base(apiService)
     {
         SaveCommand = ReactiveCommand.Create(Save);
@@ -75,8 +75,8 @@ public class UserEditDialogViewModel : ViewModel
 
     protected override async Task LoadDataAsync()
     {
-        var cabinets = await ApiService.GetCabinetsAsync();
-        var jobTitles = await ApiService.GetJobTitlesAsync();
+        var cabinets = await ApiService.CabinetsApiService.GetCabinetsAsync();
+        var jobTitles = await ApiService.JobTitlesApiService.GetJobTitlesAsync();
 
         JobTitles = new ObservableCollection<JobTitleObject>(jobTitles);
         Cabinets = new ObservableCollection<CabinetObject>(cabinets);

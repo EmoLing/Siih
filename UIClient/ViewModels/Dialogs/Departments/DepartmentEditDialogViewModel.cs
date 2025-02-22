@@ -18,7 +18,7 @@ internal class DepartmentEditDialogViewModel : ViewModel
     private ObservableCollection<CabinetObject> _cabinets = [];
     private readonly DepartmentObject _department;
 
-    public DepartmentEditDialogViewModel(ApiService apiService, DepartmentObject department)
+    public DepartmentEditDialogViewModel(MasterApiService apiService, DepartmentObject department)
         : base(apiService)
     {
         SaveCommand = ReactiveCommand.Create(Save);
@@ -50,7 +50,7 @@ internal class DepartmentEditDialogViewModel : ViewModel
         if (_department is null)
             return;
 
-        var allCabinets = await ApiService.GetCabinetsAsync();
+        var allCabinets = await ApiService.CabinetsApiService.GetCabinetsAsync();
         Cabinets = new ObservableCollection<CabinetObject>(allCabinets.Where(c => c.Department is null || c.Department == _department));
     }
 

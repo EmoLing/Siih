@@ -10,7 +10,7 @@ public class JobTitlesEditDialogViewModel : ViewModel
 {
     private string _name;
 
-    public JobTitlesEditDialogViewModel(ApiService apiService)
+    public JobTitlesEditDialogViewModel(MasterApiService apiService)
         : base(apiService)
     {
         SaveCommand = ReactiveCommand.Create(Save);

@@ -15,7 +15,7 @@ public class SelectHardwaresDialogViewModel : ViewModel
     private ObservableCollection<SelectedHardwareViewModel> _hardwares = [];
     private List<HardwareObject> _earlySelectedHardwares = [];
 
-    public SelectHardwaresDialogViewModel(ApiService apiService, List<HardwareObject> selectedHardwares)
+    public SelectHardwaresDialogViewModel(MasterApiService apiService, List<HardwareObject> selectedHardwares)
         : base(apiService)
     {
         AddHardwaresCommand = ReactiveCommand.Create(AddHardwares);
@@ -36,7 +36,7 @@ public class SelectHardwaresDialogViewModel : ViewModel
 
     protected override async Task LoadDataAsync()
     {
-        var hardwares = await ApiService.GetHardwaresAsync();
+        var hardwares = await ApiService.HardwaresApiService.GetHardwaresAsync();
         var availableHardwares = hardwares.Where(h => h.ComplexHardware is null && !_earlySelectedHardwares.Contains(h));
 
         Hardwares = new ObservableCollection<SelectedHardwareViewModel>(availableHardwares

@@ -10,11 +10,11 @@ namespace UIClient.ViewModels;
 public class MainWindowViewModel : ViewModelBase
 {
     private readonly string defaultTitle = "SIIH";
-    private readonly ApiService _apiService;
+    private readonly MasterApiService _apiService;
     private object _currentContent;
     private string _title;
 
-    public MainWindowViewModel(ApiService apiService)
+    public MainWindowViewModel(MasterApiService apiService)
     {
         _apiService = apiService;
 

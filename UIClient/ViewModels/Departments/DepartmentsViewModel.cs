@@ -14,7 +14,7 @@ public class DepartmentsViewModel : ViewModel
     private ObservableCollection<DepartmentObject> _departments = [];
     private DepartmentObject _selectedDepartment;
 
-    public DepartmentsViewModel(ApiService apiService, MainWindowViewModel mainWindowViewModel)
+    public DepartmentsViewModel(MasterApiService apiService, MainWindowViewModel mainWindowViewModel)
         : base(apiService, mainWindowViewModel)
     {
         AddCommand = ReactiveCommand.CreateFromTask(AddDepartment);
@@ -42,7 +42,7 @@ public class DepartmentsViewModel : ViewModel
 
     protected override async Task LoadDataAsync()
     {
-        var departments = await ApiService.GetDepartmentsAsync();
+        var departments = await ApiService.DepartmentsApiService.GetDepartmentsAsync();
         Departments = new ObservableCollection<DepartmentObject>(departments);
     }
 
@@ -66,7 +66,7 @@ public class DepartmentsViewModel : ViewModel
 
         try
         {
-            var createdDepartment = await ApiService.AddDepartmentAsync(department);
+            var createdDepartment = await ApiService.DepartmentsApiService.AddDepartmentAsync(department);
 
             if (createdDepartment is not null)
             {

@@ -11,7 +11,7 @@ public class HardwaresViewModel : ViewModel
     private ObservableCollection<HardwareObject> _hardwares = [];
     private HardwareObject _selectedHardware;
 
-    public HardwaresViewModel(ApiService apiService, MainWindowViewModel mainWindowViewModel)
+    public HardwaresViewModel(MasterApiService apiService, MainWindowViewModel mainWindowViewModel)
         : base(apiService, mainWindowViewModel)
     {
         AddCommand = ReactiveCommand.CreateFromTask(AddHardware);
@@ -39,7 +39,7 @@ public class HardwaresViewModel : ViewModel
 
     protected override async Task LoadDataAsync()
     {
-        var hardwares = await ApiService.GetHardwaresAsync();
+        var hardwares = await ApiService.HardwaresApiService.GetHardwaresAsync();
         Hardwares = new ObservableCollection<HardwareObject>(hardwares);
     }
 

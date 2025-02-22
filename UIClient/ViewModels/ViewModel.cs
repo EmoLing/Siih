@@ -6,7 +6,7 @@ namespace UIClient.ViewModels;
 
 public abstract class ViewModel : ViewModelBase
 {
-    public ViewModel(ApiService apiService, MainWindowViewModel mainWindowViewModel = null)
+    public ViewModel(MasterApiService apiService, MainWindowViewModel mainWindowViewModel = null)
     {
         ApiService = apiService;
         LoadDataAsync().ConfigureAwait(false);
@@ -14,7 +14,7 @@ public abstract class ViewModel : ViewModelBase
         MainWindowViewModel = mainWindowViewModel;
     }
 
-    protected ApiService ApiService { get; }
+    protected MasterApiService ApiService { get; }
     internal IView View { get; init; }
     internal MainWindowViewModel MainWindowViewModel { get; }
 

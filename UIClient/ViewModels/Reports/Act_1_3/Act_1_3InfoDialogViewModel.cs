@@ -18,7 +18,7 @@ public class Act_1_3InfoDialogViewModel : ViewModel
 
     private ObservableCollection<ErrorPTS> _errorsPTS;
 
-    public Act_1_3InfoDialogViewModel(ApiService apiService, MainWindowViewModel mainWindowViewModel)
+    public Act_1_3InfoDialogViewModel(MasterApiService apiService, MainWindowViewModel mainWindowViewModel)
         : base(apiService, mainWindowViewModel)
     {
         CreateErrorsPTSCommand = ReactiveCommand.Create<ReportHardwareViewModel>(CreateErrorsPTS);

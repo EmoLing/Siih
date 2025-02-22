@@ -16,7 +16,7 @@ public class UsersViewModel : ViewModel
     private ObservableCollection<UserObject> _users = [];
     private UserObject _selectedUser;
 
-    public UsersViewModel(ApiService apiService, MainWindowViewModel mainWindowViewModel)
+    public UsersViewModel(MasterApiService apiService, MainWindowViewModel mainWindowViewModel)
     : base(apiService, mainWindowViewModel)
     {
         AddUserCommand = ReactiveCommand.CreateFromTask(AddUser);
@@ -44,7 +44,7 @@ public class UsersViewModel : ViewModel
 
     protected override async Task LoadDataAsync()
     {
-        var users = await ApiService.GetUsersAsync();
+        var users = await ApiService.UsersApiService.GetUsersAsync();
         Users = new ObservableCollection<UserObject>(users);
     }
 
@@ -71,7 +71,7 @@ public class UsersViewModel : ViewModel
 
         try
         {
-            var createdUser = await ApiService.AddUserAsync(newUser);
+            var createdUser = await ApiService.UsersApiService.AddUserAsync(newUser);
 
             if (createdUser is not null)
             {
@@ -88,7 +88,7 @@ public class UsersViewModel : ViewModel
     {
         try
         {
-            bool result = await ApiService.DeleteUserAsync(SelectedUser.Id);
+            bool result = await ApiService.UsersApiService.DeleteUserAsync(SelectedUser.Id);
 
             if (result)
             {
@@ -140,7 +140,7 @@ public class UsersViewModel : ViewModel
 
         try
         {
-            await ApiService.UpdateUserAsync(editUser);
+            await ApiService.UsersApiService.UpdateUserAsync(editUser);
             Users.Replace(SelectedUser, editUser);
             SelectedUser = editUser;
         }

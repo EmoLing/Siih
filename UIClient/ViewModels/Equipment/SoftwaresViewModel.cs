@@ -12,7 +12,7 @@ public class SoftwaresViewModel : ViewModel
     private ObservableCollection<SoftwareObject> _softwares = [];
     private SoftwareObject _selectedSoftware;
 
-    public SoftwaresViewModel(ApiService apiService, MainWindowViewModel mainWindowViewModel)
+    public SoftwaresViewModel(MasterApiService apiService, MainWindowViewModel mainWindowViewModel)
         : base(apiService, mainWindowViewModel)
     {
         AddCommand = ReactiveCommand.CreateFromTask(AddSoftware);
@@ -40,7 +40,7 @@ public class SoftwaresViewModel : ViewModel
 
     protected override async Task LoadDataAsync()
     {
-        var softwares = await ApiService.GetSoftwaresAsync();
+        var softwares = await ApiService.SoftwaresApiService.GetSoftwaresAsync();
         Softwares = new ObservableCollection<SoftwareObject>(softwares);
     }
 

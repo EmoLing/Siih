@@ -14,7 +14,7 @@ public class CabinetsViewModel : ViewModel
     private ObservableCollection<CabinetObject> _cabinets = [];
     private CabinetObject _selectedCabinet;
 
-    public CabinetsViewModel(ApiService apiService, MainWindowViewModel mainWindowViewModel)
+    public CabinetsViewModel(MasterApiService apiService, MainWindowViewModel mainWindowViewModel)
         : base(apiService, mainWindowViewModel)
     {
         AddCommand = ReactiveCommand.CreateFromTask(AddCabinet);
@@ -42,7 +42,7 @@ public class CabinetsViewModel : ViewModel
 
     protected override async Task LoadDataAsync()
     {
-        var hardwares = await ApiService.GetCabinetsAsync();
+        var hardwares = await ApiService.CabinetsApiService.GetCabinetsAsync();
         Cabinets = new ObservableCollection<CabinetObject>(hardwares);
     }
 
@@ -66,7 +66,7 @@ public class CabinetsViewModel : ViewModel
 
         try
         {
-            var createdCabinet = await ApiService.AddCabinetAsync(cabinet);
+            var createdCabinet = await ApiService.CabinetsApiService.AddCabinetAsync(cabinet);
 
             if (createdCabinet is not null)
             {
