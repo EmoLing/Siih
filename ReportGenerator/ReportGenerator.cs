@@ -1,4 +1,5 @@
-﻿using NPOI.XWPF.UserModel;
+﻿using NPOI.OpenXmlFormats.Wordprocessing;
+using NPOI.XWPF.UserModel;
 using ReportGenerator.Strategy;
 using ReportModel;
 using System.Diagnostics;
@@ -36,7 +37,19 @@ public static class ReportGenerator
                 continue;
 
             int startRowIndex = tableInfo.StartIndexRow;
+            //var mergeRows = new List<MergeRows>();
+            //var mergedRowInfos = tableInfo.RowsInfo.Where(ri => ri.IsStartMerge || ri.IsEndMerge).ToList();
 
+            //for (int i = 0; i < mergedRowInfos.Count; i += 2)
+            //{
+            //    mergeRows.Add(new MergeRows()
+            //    {
+            //        PairStart = (null, mergedRowInfos[i]),
+            //        PairEnd = (null, mergedRowInfos[i + 1])
+            //    });
+            //}
+
+            (XWPFTableRow row, RowInfo rowInfo) startRow = (null, null);
             foreach (var rowInfo in tableInfo.RowsInfo)
             {
                 var row = table.GetRow(startRowIndex);
@@ -49,8 +62,39 @@ public static class ReportGenerator
 
                 report.FillTableRow(row, rowInfo);
 
+                if (rowInfo.HasMerge)
+                {
+                    if (rowInfo.IsStartMerge)
+                    {
+                        startRow = (row, rowInfo);
+                        report.MergeRows(row, rowInfo, ST_Merge.restart);
+                    }
+                    else
+                        report.MergeRows(row, rowInfo, ST_Merge.@continue);
+
+                    if (rowInfo.IsEndMerge)
+                        report.FillTableRowAfterMerge(startRow.row, startRow.rowInfo, rowInfo);
+                }
+
                 startRowIndex++;
             }
+
+            //StartMergeRows(mergeRows);
+        }
+    }
+
+    private static void StartMergeRows(List<MergeRows> mergeRows)
+    {
+        if (mergeRows.Count == 0)
+            return;
+
+        foreach (var mergeRow in mergeRows)
+        {
+            int numberStart = mergeRow.PairEnd.rowInfo.Number;
+            int numberEnd = mergeRow.PairEnd.rowInfo.Number;
+            int dif = numberEnd - numberStart;
+
+            mergeRow.PairStart.row.MergeCells(0, dif);
         }
     }
 
@@ -59,4 +103,10 @@ public static class ReportGenerator
         ReportType.Act_so_1_3 => "act_1.3.docx",
         _ => String.Empty,
     };
+
+    private class MergeRows
+    {
+        public (XWPFTableRow row, RowInfo rowInfo) PairStart { get; set; }
+        public (XWPFTableRow row, RowInfo rowInfo) PairEnd { get; set; }
+    }
 }
