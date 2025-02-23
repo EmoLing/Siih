@@ -44,7 +44,7 @@
 				</DataGrid.Styles>
 
 				<DataGrid.Columns>
-					<DataGridTextColumn Header="№" Binding="{Binding Id}" Width="auto"/>
+					<!--<DataGridTextColumn Header="№" Binding="{Binding Id}" Width="auto"/>-->
 					<DataGridTextColumn Header="Наименование" Binding="{Binding Name}" Width="*"/>
 					<DataGridTextColumn Header="Версия" Binding="{Binding Version}" Width="*"/>
 				</DataGrid.Columns>

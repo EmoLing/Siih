@@ -43,7 +43,7 @@
 					</Style>
 				</DataGrid.Styles>
 				<DataGrid.Columns>
-					<DataGridTextColumn Header="№" Binding="{Binding Id}" Width="auto"/>
+					<!--<DataGridTextColumn Header="№" Binding="{Binding Id}" Width="auto"/>-->
 					<DataGridTextColumn Header="Фамилия" Binding="{Binding LastName}" Width="*"/>
 					<DataGridTextColumn Header="Имя" Binding="{Binding FirstName}" Width="*"/>
 					<DataGridTextColumn Header="Должность" Binding="{Binding JobTitle.Name}" Width="*" />
