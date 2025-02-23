@@ -26,7 +26,7 @@ public class Act_1_3Table1Info(List<ComplexHardwareObject> complexesHardware) : 
                     SerialNumber = hardware.SerialNumber,
                     Article = hardware.Article,
                     DateCreate = hardware.DateCreate.ToShortDateString(),
-                    InstallPlace = complexHardware.User?.Cabinet.Name,
+                    InstallPlace = complexHardware.User?.Cabinet?.Name,
                     User = complexHardware.User?.ToString(),
                 };
 

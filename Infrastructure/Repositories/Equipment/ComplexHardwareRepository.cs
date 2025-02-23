@@ -10,7 +10,8 @@ internal class ComplexHardwareRepository(ApplicationDBContext dbContext) : IComp
         => await dbContext.ComplexesHardware.Include(ch => ch.Hardwares).Include(ch => ch.User).ToListAsync(cancellationToken);
 
     public async Task<ComplexHardware> GetComplexHardwareByIdAsync(int id, CancellationToken cancellationToken = default)
-        => await (dbContext.ComplexesHardware.Include(ch => ch.Hardwares).Include(ch => ch.User)).FirstOrDefaultAsync(ch => ch.Id == id, cancellationToken);
+        => await (dbContext.ComplexesHardware.Include(ch => ch.Hardwares).Include(ch => ch.User).Include(ch => ch.User.Cabinet))
+        .FirstOrDefaultAsync(ch => ch.Id == id, cancellationToken);
 
     public async Task<ComplexHardware> AddComplexHardwareAsync(ComplexHardware complexHardware, CancellationToken cancellationToken = default)
     {
