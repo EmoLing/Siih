@@ -63,6 +63,8 @@ public partial class App : Application
             {
                 DataContext = serviceProvider.GetRequiredService<MainWindowViewModel>(),
             };
+
+            (desktop.MainWindow.DataContext as MainWindowViewModel).Window = desktop.MainWindow;
         }
 
         base.OnFrameworkInitializationCompleted();

@@ -1,6 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
+using Core.Models.Equipment;
+using DynamicData;
 using ReactiveUI;
 using Shared.DTOs.Equipment;
 using UIClient.Services;
@@ -18,7 +21,7 @@ public class ComplexesHardwareViewModel : ViewModel
         : base(apiService, mainWindowViewModel)
     {
         AddCommand = ReactiveCommand.CreateFromTask(AddComplexHardware);
-        DeleteCommand = ReactiveCommand.Create(DeleteComplexHardware);
+        DeleteCommand = ReactiveCommand.CreateFromTask(DeleteComplexHardware);
         EditCommand = ReactiveCommand.CreateFromTask(EditComplexHardware);
 
         MainWindowViewModel.SetTitle("Комплекс");
@@ -82,9 +85,21 @@ public class ComplexesHardwareViewModel : ViewModel
         }
     }
 
-    private void DeleteComplexHardware()
+    private async Task DeleteComplexHardware()
     {
-        // Логика удаления пользователя
+        try
+        {
+            bool result = await ApiService.ComplexesHardwareApiService.DeleteComplexHardwareAsync(SelectedComplexHardware.Id);
+
+            if (result)
+            {
+                ComplexesHardware.Remove(SelectedComplexHardware);
+                SelectedComplexHardware = ComplexesHardware.FirstOrDefault();
+            }
+        }
+        catch
+        {
+        }
     }
 
     private async Task EditComplexHardware()
@@ -92,34 +107,36 @@ public class ComplexesHardwareViewModel : ViewModel
         var dialog = new ComplexHardwareEditDialog();
         dialog.DataContext = new ComplexHardwareEditDialogViewModel(ApiService, SelectedComplexHardware) { View = dialog };
 
-        var result = await dialog.ShowDialog<bool>(App.Owner);
+        bool result = await dialog.ShowDialog<bool>(App.Owner);
 
         if (!result)
             return;
 
-        //var dialogData = (dialog.DataContext as ComplexHardwareEditDialogViewModel);
+        var dialogData = (dialog.DataContext as ComplexHardwareEditDialogViewModel);
 
-        //var complexHardware = new ComplexHardware()
-        //{
-        //    Name = dialogData.Name,
-        //    InventoryNumber = dialogData.InventoryNumber,
-        //    Type = dialogData.Type,
-        //    User = dialogData.User,
-        //    Hardwares = [.. dialogData.Hardwares],
-        //};
+        var complexHardware = new ComplexHardwareObject()
+        {
+            Id = SelectedComplexHardware.Id,
+            Guid = SelectedComplexHardware.Guid,
+            Name = dialogData.Name,
+            InventoryNumber = dialogData.InventoryNumber,
+            Type = dialogData.Type,
+            User = dialogData.User,
+            Hardwares = [.. dialogData.Hardwares],
+        };
 
-        //try
-        //{
-        //    var createdComplexHardware = await ApiService.AddComplexHardwareAsync(complexHardware);
+        try
+        {
+            await ApiService.ComplexesHardwareApiService.UpdateComplexHardwareAsync(complexHardware);
+            var updatedComplex = await ApiService.ComplexesHardwareApiService.GetComplexHardwareAsync(complexHardware.Id);
 
-        //    if (createdComplexHardware is not null)
-        //    {
-        //        ComplexesHardware.Add(createdComplexHardware);
-        //        SelectedComplexHardware = createdComplexHardware;
-        //    }
-        //}
-        //catch
-        //{
-        //}
+            ComplexesHardware.Replace(SelectedComplexHardware, updatedComplex);
+            var changedCollection = ComplexesHardware.ToList();
+            ComplexesHardware = new ObservableCollection<ComplexHardwareObject>(changedCollection);
+            SelectedComplexHardware = updatedComplex;
+        }
+        catch
+        {
+        }
     }
 }

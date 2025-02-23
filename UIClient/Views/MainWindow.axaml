@@ -10,9 +10,9 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="{Binding Title}">
 
-    <Design.DataContext>
+    <!--<Design.DataContext>
         <vm:MainWindowViewModel/>
-    </Design.DataContext>
+    </Design.DataContext>-->
 	<DockPanel>
 		<StackPanel DockPanel.Dock="Left" Width="200" Background="#d6e7ff">
 			<Button ToolTip.Tip="Пользователи" Command="{Binding ShowUsersCommand}" Margin="10">

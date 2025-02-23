@@ -10,6 +10,8 @@ public class DepartmentsApiService(HttpClient httpClient) : ApiService(httpClien
 {
     public async Task<List<DepartmentObject>> GetDepartmentsAsync() => await HttpClient.GetFromJsonAsync<List<DepartmentObject>>("api/departments");
 
+    public async Task<DepartmentObject> GetDepartmentAsync(int id) => await HttpClient.GetFromJsonAsync<DepartmentObject>($"api/departments/{id}");
+
     public async Task<DepartmentObject> AddDepartmentAsync(DepartmentObject department)
     {
         var response = await HttpClient.PostAsJsonAsync("api/departments", department, CancellationToken);
@@ -17,5 +19,19 @@ public class DepartmentsApiService(HttpClient httpClient) : ApiService(httpClien
 
         var createdDepartment = await response.Content.ReadFromJsonAsync<DepartmentObject>(CancellationToken);
         return createdDepartment;
+    }
+
+    public async Task UpdateDepartmentAsync(DepartmentObject department)
+    {
+        var response = await HttpClient.PutAsJsonAsync("api/departments", department, CancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task<bool> DeleteDepartmentAsync(int id)
+    {
+        var response = await HttpClient.DeleteAsync($"api/departments/{id}", CancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        return response.StatusCode == System.Net.HttpStatusCode.OK;
     }
 }

@@ -23,7 +23,7 @@
 			</Button>
 		</StackPanel>
 		<ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
-			<DataGrid ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}" IsReadOnly="True"
+			<DataGrid ItemsSource="{Binding Users, Mode=TwoWay}" SelectedItem="{Binding SelectedUser}" IsReadOnly="True"
 					  GridLinesVisibility="All" 
 					  BorderThickness="1" BorderBrush="Gray">
 				<DataGrid.Styles>

@@ -20,7 +20,7 @@
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="auto"/>
 			</Grid.ColumnDefinitions>
-			<TextBox Grid.Column="0" Text="{Binding User.Name}" VerticalAlignment="Center" Margin="0 5 5 5"/>
+			<TextBox Grid.Column="0" IsEnabled="False" Text="{Binding User.Name}" VerticalAlignment="Center" Margin="0 5 5 5"/>
 			<Button Grid.Column="1" Content="Выбрать" Command="{Binding SelectUserCommand}" VerticalAlignment="Center"/>
 		</Grid>
 

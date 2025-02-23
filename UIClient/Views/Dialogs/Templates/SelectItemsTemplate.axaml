@@ -20,10 +20,15 @@
 		</StackPanel>
 		<StackPanel Grid.Row="1" Margin="10">
 			<TextBlock Text="Доступное оборудование:" />
-			<ListBox ItemsSource="{Binding Items}" Height="300">
+			<ListBox ItemsSource="{Binding Items}" Focusable="True" SelectedItem="{Binding FocusedObject}" Height="300">
 				<ListBox.ItemTemplate>
 					<DataTemplate>
-						<CheckBox Content="{Binding TransferObject.Name}" IsChecked="{Binding IsSelected}" />
+						<StackPanel>
+							<CheckBox IsVisible="{Binding RelativeSource={RelativeSource AncestorType=Window},
+									  Path=((vm:SelectItemsViewModel)DataContext).SupportCheckBoxSelected}"
+									  IsChecked="{Binding IsSelected}" />
+							<TextBlock Text="{Binding TransferObject.Name}" />
+						</StackPanel>
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>

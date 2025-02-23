@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using DynamicData;
 using ReactiveUI;
 using Shared.DTOs.Users;
@@ -13,12 +14,14 @@ namespace UIClient.ViewModels;
 
 public class JobTitlesViewModel : ViewModel
 {
-    private ObservableCollection<JobTitleObject> _jobTitles = [];
+    private ObservableCollection<JobTitleObject> _jobTitles;
     private JobTitleObject _selectedJobTitle;
 
     public JobTitlesViewModel(MasterApiService apiService, MainWindowViewModel mainWindowViewModel)
         : base(apiService, mainWindowViewModel)
     {
+        JobTitles = [];
+
         AddCommand = ReactiveCommand.CreateFromTask(AddJobTitle);
         DeleteCommand = ReactiveCommand.CreateFromTask(DeleteJobTitle);
         EditCommand = ReactiveCommand.CreateFromTask(EditJobTitle);
@@ -45,13 +48,15 @@ public class JobTitlesViewModel : ViewModel
     protected override async Task LoadDataAsync()
     {
         var jobTitles = await ApiService.JobTitlesApiService.GetJobTitlesAsync();
-        JobTitles = new ObservableCollection<JobTitleObject>(jobTitles);
+        await Dispatcher.UIThread.InvokeAsync(() => jobTitles.ForEach(jt => JobTitles.Add(jt)));
     }
 
     private async Task AddJobTitle()
     {
         var dialog = new JobTitleEditDialog();
         dialog.DataContext = new JobTitlesEditDialogViewModel(ApiService) { View = dialog };
+
+        await (dialog.DataContext as ViewModel)?.InitializeAsync();
 
         var result = await dialog.ShowDialog<bool>(App.Owner);
 
@@ -106,6 +111,8 @@ public class JobTitlesViewModel : ViewModel
             Name = SelectedJobTitle.Name,
             View = dialog,
         };
+
+        await (dialog.DataContext as ViewModel)?.InitializeAsync();
 
         bool result = await dialog.ShowDialog<bool>(App.Owner);
 

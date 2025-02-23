@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Avalonia.Controls;
 using UIClient.Services;
 using UIClient.Views;
 
@@ -9,9 +10,12 @@ public abstract class ViewModel : ViewModelBase
     public ViewModel(MasterApiService apiService, MainWindowViewModel mainWindowViewModel = null)
     {
         ApiService = apiService;
-        LoadDataAsync().ConfigureAwait(false);
-
         MainWindowViewModel = mainWindowViewModel;
+    }
+
+    public async Task InitializeAsync()
+    {
+        await LoadingDialog.ShowLoadingDialog(LoadDataAsync, App.Owner);
     }
 
     protected MasterApiService ApiService { get; }

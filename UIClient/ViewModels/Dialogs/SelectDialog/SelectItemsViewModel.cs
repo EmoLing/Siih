@@ -13,6 +13,7 @@ namespace UIClient.ViewModels.Dialogs.SelectDialog;
 public class SelectItemsViewModel : ViewModelBase
 {
     private ObservableCollection<SelectedItemViewModel> _items = [];
+    private SelectedItemViewModel _focusedObject;
 
     public SelectItemsViewModel()
     {
@@ -23,7 +24,7 @@ public class SelectItemsViewModel : ViewModelBase
     internal IView View { get; init; }
     public ICommand CancelCommand { get; }
     public ICommand AddCommand { get; }
-    public Action LoadAction;
+    public bool SupportCheckBoxSelected { get; set; } = true;
 
     public ObservableCollection<SelectedItemViewModel> Items
     {
@@ -31,13 +32,19 @@ public class SelectItemsViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _items, value);
     }
 
-    public List<TransferObject> SelectedSelectedItems { get; private set; } = [];
+    public SelectedItemViewModel FocusedObject
+    {
+        get => _focusedObject;
+        set => this.RaiseAndSetIfChanged(ref _focusedObject, value);
+    }
+
+    public List<TransferObject> SelectedItems { get; private set; } = [];
 
     public List<TransferObject> EarlySelectedItems { get; init; } = [];
 
     private void AddItems()
     {
-        SelectedSelectedItems = Items.Where(h => h.IsSelected).Select(ch => ch.TransferObject).ToList();
+        SelectedItems = Items.Where(h => h.IsSelected).Select(ch => ch.TransferObject).ToList();
         CloseDialog(true);
     }
 

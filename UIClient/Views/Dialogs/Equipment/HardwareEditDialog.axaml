@@ -1,0 +1,48 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		xmlns:vm="using:UIClient.ViewModels.Dialogs.Equipment"
+        x:Class="UIClient.Views.Dialogs.Equipment.HardwareEditDialog"
+        Title="HardwareEditDialog"
+		x:DataType="vm:HardwareEditDialogViewModel">
+	<StackPanel Margin="10 10 10 0">
+		<StackPanel Margin="5">
+			<TextBlock Text="Наименование" />
+			<TextBox Text="{Binding Name}"/>
+		</StackPanel>
+
+		<StackPanel Margin="5">
+			<TextBlock Text="Серийный номер" />
+			<TextBox Text="{Binding  SerialNumber}"/>
+		</StackPanel>
+
+		<StackPanel Margin="5">
+			<TextBlock Text="Article" />
+			<TextBox Text="{Binding Article}"/>
+		</StackPanel>
+
+		<StackPanel Margin="5">
+			<TextBlock Text="Дата создания" />
+			<DatePicker DayFormat="ddd dd" SelectedDate="{Binding DateCreate}" />
+		</StackPanel>
+
+		<StackPanel Margin="5">
+			<WrapPanel>
+				<Button Content="Добавить" Command="{Binding AddSoftwareCommand}" Width="100"
+						HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+				<Button Content="Удалить" Command="{Binding DeleteSoftwareCommand}" Width="100"
+						HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+			</WrapPanel>
+			<ListBox ItemsSource="{Binding Softwares}" SelectionMode="Multiple" Height="200" />
+		</StackPanel>
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 20 0 0">
+			<Button Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+					Content="Сохранить" Command="{Binding SaveCommand}" Margin="0 0 10 0" />
+
+			<Button Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+					Content="Отмена" Command="{Binding CancelCommand}" />
+		</StackPanel>
+	</StackPanel>
+</Window>

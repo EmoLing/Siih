@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
+using Avalonia.Threading;
+using Core.Models.Users;
 using DynamicData;
 using ReactiveUI;
 using Shared.DTOs.Users;
@@ -13,7 +15,7 @@ namespace UIClient.ViewModels;
 
 public class UsersViewModel : ViewModel
 {
-    private ObservableCollection<UserObject> _users = [];
+    private ObservableCollection<UserObject> _users;
     private UserObject _selectedUser;
 
     public UsersViewModel(MasterApiService apiService, MainWindowViewModel mainWindowViewModel)
@@ -22,6 +24,8 @@ public class UsersViewModel : ViewModel
         AddUserCommand = ReactiveCommand.CreateFromTask(AddUser);
         DeleteUserCommand = ReactiveCommand.CreateFromTask(DeleteUser);
         EditUserCommand = ReactiveCommand.CreateFromTask(EditUser);
+
+        Users = [];
 
         MainWindowViewModel.SetTitle("Пользователи");
     }
@@ -45,13 +49,16 @@ public class UsersViewModel : ViewModel
     protected override async Task LoadDataAsync()
     {
         var users = await ApiService.UsersApiService.GetUsersAsync();
-        Users = new ObservableCollection<UserObject>(users);
+        await Dispatcher.UIThread.InvokeAsync(() => users.ForEach(u => Users.Add(u)));
     }
 
     private async Task AddUser()
     {
         var dialog = new UserEditDialog();
-        dialog.DataContext = new UserEditDialogViewModel(ApiService) { View = dialog };
+        var dialogVM = new UserEditDialogViewModel(ApiService) { View = dialog };
+
+        await dialogVM.InitializeAsync();
+        dialog.DataContext = dialogVM;
 
         var result = await dialog.ShowDialog<bool>(App.Owner);
 
@@ -108,7 +115,7 @@ public class UsersViewModel : ViewModel
 
         var dialog = new UserEditDialog();
 
-        dialog.DataContext = new UserEditDialogViewModel(ApiService)
+        var dialogVM = new UserEditDialogViewModel(ApiService)
         {
             FirstName = SelectedUser.FirstName,
             LastName = SelectedUser.LastName,
@@ -118,12 +125,15 @@ public class UsersViewModel : ViewModel
             View = dialog,
         };
 
+        await dialogVM.InitializeAsync();
+        dialog.DataContext = dialogVM;
+
         bool result = await dialog.ShowDialog<bool>(App.Owner);
 
         if (!result)
             return;
 
-        var dialogData = (dialog.DataContext as UserEditDialogViewModel);
+        var dialogData = dialog.DataContext as UserEditDialogViewModel;
 
         var editUser = new UserObject()
         {

@@ -11,6 +11,5 @@ public partial class JobTitlesView : UserControl
     public JobTitlesView()
     {
         InitializeComponent();
-        DataContext = ((App)Application.Current).Services.GetRequiredService<JobTitlesViewModel>();
     }
 }

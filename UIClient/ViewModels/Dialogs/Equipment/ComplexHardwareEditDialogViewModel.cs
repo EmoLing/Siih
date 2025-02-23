@@ -92,7 +92,7 @@ public class ComplexHardwareEditDialogViewModel : ViewModel
         var dialog = new SelectHardwaresDialog();
         dialog.DataContext = new SelectHardwaresDialogViewModel(ApiService, [.. Hardwares]) { View = dialog };
 
-        var result = await dialog.ShowDialog<bool>(App.Owner);
+        bool result = await dialog.ShowDialog<bool>(App.Owner);
 
         if (!result)
             return;
@@ -116,7 +116,8 @@ public class ComplexHardwareEditDialogViewModel : ViewModel
         var selectDialogVM = new SelectItemsViewModel
         {
             Items = new ObservableCollection<SelectedItemViewModel>(filteredUsers),
-            View = selectDialog
+            View = selectDialog,
+            SupportCheckBoxSelected = false,
         };
 
         selectDialog.DataContext = selectDialogVM;
@@ -126,8 +127,12 @@ public class ComplexHardwareEditDialogViewModel : ViewModel
         if (!result)
             return;
 
-        var selectedItem = (selectDialog.DataContext as SelectItemsViewModel)?.SelectedSelectedItems.FirstOrDefault();
-        var user = await ApiService.UsersApiService.GetUserAsync(selectedItem.Id);
+        var focusedItem = (selectDialog.DataContext as SelectItemsViewModel)?.FocusedObject?.TransferObject;
+
+        if (focusedItem is null)
+            return;
+
+        var user = await ApiService.UsersApiService.GetUserAsync(focusedItem.Id);
 
         if (user is null)
             return;

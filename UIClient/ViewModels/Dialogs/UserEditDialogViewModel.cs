@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia.Threading;
 using ReactiveUI;
 using Shared.DTOs.Departments;
 using Shared.DTOs.Users;
@@ -77,12 +78,15 @@ public class UserEditDialogViewModel : ViewModel
     {
         var cabinets = await ApiService.CabinetsApiService.GetCabinetsAsync();
         var jobTitles = await ApiService.JobTitlesApiService.GetJobTitlesAsync();
-
         JobTitles = new ObservableCollection<JobTitleObject>(jobTitles);
         Cabinets = new ObservableCollection<CabinetObject>(cabinets);
 
         SelectedJobTitle = _selectedJobTitle ?? JobTitles.FirstOrDefault();
         SelectedCabinet = _selectedCabinet ?? Cabinets.FirstOrDefault();
+        //await Dispatcher.UIThread.InvokeAsync(() =>
+        //{
+
+        //});
     }
 
     private void Save()

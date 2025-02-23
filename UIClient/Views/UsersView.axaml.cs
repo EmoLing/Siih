@@ -11,6 +11,5 @@ public partial class UsersView : UserControl
     public UsersView()
     {
         InitializeComponent();
-        DataContext = ((App)Application.Current).Services.GetRequiredService<UsersViewModel>();
     }
 }

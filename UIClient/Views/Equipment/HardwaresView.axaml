@@ -18,7 +18,7 @@
 		</StackPanel>
 		<ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
 			<DataGrid ItemsSource="{Binding Hardwares}" IsReadOnly="True"
-					  GridLinesVisibility="All"
+					  GridLinesVisibility="All" SelectedItem="{Binding SelectedHardware}"
 					  BorderThickness="1" BorderBrush="Gray">
 				<DataGrid.Styles>
 					<Style Selector="DataGridColumnHeader">
