@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="400"
         x:Class="UIClient.Views.Dialogs.Departments.SelectCabinetsDialog"
-        Title="SelectHardwaresDialog"
+        Title="Выбо кабинетов"
 		xmlns:vm="using:UIClient.ViewModels.Dialogs.Departments"
 		x:DataType="vm:SelectCabinetsDialogViewModel">
 	<Grid>
@@ -17,7 +17,7 @@
 			<Button Content="Отмена" Command="{Binding CancelCommand}" />
 		</StackPanel>
 		<StackPanel Grid.Row="1" Margin="10">
-			<TextBlock Text="Доступное оборудование:" />
+			<TextBlock Text="Доступные кабинеты:" />
 			<ListBox ItemsSource="{Binding Cabinets}" Height="300">
 				<ListBox.ItemTemplate>
 					<DataTemplate>

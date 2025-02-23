@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
+using DynamicData;
 using ReactiveUI;
 using Shared.DTOs.Departments;
 using UIClient.Services;
@@ -18,7 +20,7 @@ public class DepartmentsViewModel : ViewModel
         : base(apiService, mainWindowViewModel)
     {
         AddCommand = ReactiveCommand.CreateFromTask(AddDepartment);
-        DeleteCommand = ReactiveCommand.Create(DeleteDepartment);
+        DeleteCommand = ReactiveCommand.CreateFromTask(DeleteDepartment);
         EditCommand = ReactiveCommand.CreateFromTask(EditDepartment);
 
         MainWindowViewModel.SetTitle("Отделы");
@@ -52,7 +54,7 @@ public class DepartmentsViewModel : ViewModel
         dialog.DataContext = new DepartmentEditDialogViewModel(ApiService, null) { View = dialog };
         await (dialog.DataContext as ViewModel)?.InitializeAsync();
 
-        var result = await dialog.ShowDialog<bool>(App.Owner);
+        bool result = await dialog.ShowDialog<bool>(App.Owner);
 
         if (!result)
             return;
@@ -80,13 +82,54 @@ public class DepartmentsViewModel : ViewModel
         }
     }
 
-    private void DeleteDepartment()
+    private async Task DeleteDepartment()
     {
-        // Логика удаления пользователя
+        try
+        {
+            bool result = await ApiService.DepartmentsApiService.DeleteDepartmentAsync(SelectedDepartment.Id);
+
+            if (result)
+            {
+                Departments.Remove(SelectedDepartment);
+                SelectedDepartment = Departments.FirstOrDefault();
+            }
+        }
+        catch
+        {
+        }
     }
 
-    private Task EditDepartment()
+    private async Task EditDepartment()
     {
-        return Task.CompletedTask;
+        var dialog = new DepartmentEditDialog();
+        dialog.DataContext = new DepartmentEditDialogViewModel(ApiService, SelectedDepartment) { View = dialog };
+
+        bool result = await dialog.ShowDialog<bool>(App.Owner);
+
+        if (!result)
+            return;
+
+        var dialogData = (dialog.DataContext as DepartmentEditDialogViewModel);
+
+        var department = new DepartmentObject()
+        {
+            Id = SelectedDepartment.Id,
+            Guid = SelectedDepartment.Guid,
+            Name = dialogData.Name,
+            Cabinets = [.. dialogData.Cabinets],
+        };
+
+        try
+        {
+            await ApiService.DepartmentsApiService.UpdateDepartmentAsync(department);
+
+            Departments.Replace(SelectedDepartment, department);
+            var changedCollection = Departments.ToList();
+            Departments = new ObservableCollection<DepartmentObject>(changedCollection);
+            SelectedDepartment = department;
+        }
+        catch
+        {
+        }
     }
 }

@@ -7,42 +7,56 @@
         x:Class="UIClient.Views.Dialogs.Equipment.HardwareEditDialog"
         Title="HardwareEditDialog"
 		x:DataType="vm:HardwareEditDialogViewModel">
-	<StackPanel Margin="10 10 10 0">
-		<StackPanel Margin="5">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="50"/>
+		</Grid.RowDefinitions>
+		
+		<StackPanel Grid.Row="0" Margin="5">
 			<TextBlock Text="Наименование" />
-			<TextBox Text="{Binding Name}"/>
+			<TextBox Margin="0 2 0 0" Text="{Binding Name}"/>
 		</StackPanel>
 
-		<StackPanel Margin="5">
+		<StackPanel Grid.Row="1" Margin="5">
 			<TextBlock Text="Серийный номер" />
-			<TextBox Text="{Binding  SerialNumber}"/>
+			<TextBox Margin="0 2 0 0" Text="{Binding  SerialNumber}"/>
 		</StackPanel>
 
-		<StackPanel Margin="5">
+		<StackPanel Grid.Row="2" Margin="5">
 			<TextBlock Text="Article" />
-			<TextBox Text="{Binding Article}"/>
+			<TextBox Margin="0 2 0 0" Text="{Binding Article}"/>
 		</StackPanel>
 
-		<StackPanel Margin="5">
+		<StackPanel Grid.Row="3" Margin="5">
 			<TextBlock Text="Дата создания" />
-			<DatePicker DayFormat="ddd dd" SelectedDate="{Binding DateCreate}" />
+			<DatePicker Margin="0 2 0 0" DayFormat="ddd dd" SelectedDate="{Binding DateCreate}" />
 		</StackPanel>
 
-		<StackPanel Margin="5">
-			<WrapPanel>
+		<Grid Grid.Row="4" Margin="5">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="50" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+			<WrapPanel Grid.Row="0">
 				<Button Content="Добавить" Command="{Binding AddSoftwareCommand}" Width="100"
 						HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
 				<Button Content="Удалить" Command="{Binding DeleteSoftwareCommand}" Width="100"
 						HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
 			</WrapPanel>
-			<ListBox ItemsSource="{Binding Softwares}" SelectedItem="{Binding SelectedSoftware}" Height="200" />
-		</StackPanel>
-		<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 20 0 0">
+			<ListBox Grid.Row="1" ItemsSource="{Binding Softwares}" SelectedItem="{Binding SelectedSoftware}" />
+		</Grid>
+
+		<StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5 10 0 10">
 			<Button Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
 					Content="Сохранить" Command="{Binding SaveCommand}" Margin="0 0 10 0" />
 
 			<Button Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
 					Content="Отмена" Command="{Binding CancelCommand}" />
 		</StackPanel>
-	</StackPanel>
+	</Grid>
 </Window>

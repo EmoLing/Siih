@@ -12,11 +12,12 @@ using UIClient.Views.Dialogs.Departments;
 
 namespace UIClient.ViewModels.Dialogs.Departments;
 
-internal class DepartmentEditDialogViewModel : ViewModel
+public class DepartmentEditDialogViewModel : ViewModel
 {
     private string _name;
     private ObservableCollection<CabinetObject> _cabinets = [];
-    private readonly DepartmentObject _department;
+    private CabinetObject _selectedCabinet;
+    private bool _isEnableRemove;
 
     public DepartmentEditDialogViewModel(MasterApiService apiService, DepartmentObject department)
         : base(apiService)
@@ -24,14 +25,19 @@ internal class DepartmentEditDialogViewModel : ViewModel
         SaveCommand = ReactiveCommand.Create(Save);
         CancelCommand = ReactiveCommand.Create(Cancel);
         AddCabinetsCommand = ReactiveCommand.Create(AddCabinets);
+        RemoveCabinetCommand = ReactiveCommand.Create(RemoveCabinet);
 
-        _department = department;
+        if (department is not null)
+        {
+            Name = department.Name;
+            Cabinets = new ObservableCollection<CabinetObject>(department.Cabinets);
+        }
     }
 
     public ICommand SaveCommand { get; }
     public ICommand CancelCommand { get; }
-
     public ICommand AddCabinetsCommand { get; }
+    public ICommand RemoveCabinetCommand { get; }
 
     public string Name
     {
@@ -45,13 +51,25 @@ internal class DepartmentEditDialogViewModel : ViewModel
         set => this.RaiseAndSetIfChanged(ref _cabinets, value);
     }
 
-    protected override async Task LoadDataAsync()
+    public CabinetObject SelectedCabinet
     {
-        if (_department is null)
-            return;
+        get => _selectedCabinet;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedCabinet, value);
+            IsEnableRemove = value is not null;
+        }
+    }
 
-        var allCabinets = await ApiService.CabinetsApiService.GetCabinetsAsync();
-        Cabinets = new ObservableCollection<CabinetObject>(allCabinets.Where(c => c.Department is null || c.Department == _department));
+    public bool IsEnableRemove
+    {
+        get => _isEnableRemove;
+        set => this.RaiseAndSetIfChanged(ref _isEnableRemove, value);
+    }
+
+    protected override Task LoadDataAsync()
+    {
+        return Task.CompletedTask;
     }
 
     private void Save()
@@ -68,14 +86,23 @@ internal class DepartmentEditDialogViewModel : ViewModel
     {
         var dialog = new SelectCabinetsDialog();
         dialog.DataContext = new SelectCabinetsDialogViewModel(ApiService, [.. Cabinets]) { View = dialog };
+        await (dialog.DataContext as ViewModel)?.InitializeAsync();
 
-        var result = await dialog.ShowDialog<bool>(App.Owner);
+        bool result = await dialog.ShowDialog<bool>(App.Owner);
 
         if (!result)
             return;
 
         var dataContext = (dialog.DataContext as SelectCabinetsDialogViewModel);
         Cabinets.AddRange(dataContext.SelectedCabinets);
+    }
+
+    public void RemoveCabinet()
+    {
+        if (SelectedCabinet is null)
+            return;
+
+        Cabinets.Remove(SelectedCabinet);
     }
 
     private void CloseDialog(bool result)

@@ -24,7 +24,7 @@
 		</StackPanel>
 		<ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
 			<DataGrid ItemsSource="{Binding Departments}" IsReadOnly="True"
-					  GridLinesVisibility="All"
+					  GridLinesVisibility="All" SelectedItem="{Binding SelectedDepartment}"
 					  BorderThickness="1" BorderBrush="Gray">
 				<DataGrid.Styles>
 					<Style Selector="DataGridColumnHeader">

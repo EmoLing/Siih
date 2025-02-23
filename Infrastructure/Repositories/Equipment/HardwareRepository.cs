@@ -10,7 +10,7 @@ internal class HardwareRepository(ApplicationDBContext dbContext) : IHardwareRep
         => await dbContext.Hardwares.Include(h => h.Softwares).Include(h => h.ComplexHardware).ToListAsync(cancellationToken);
 
     public async Task<Hardware> GetHardwareByIdAsync(int id, CancellationToken cancellationToken = default)
-        => await dbContext.Hardwares.FirstOrDefaultAsync(h => h.Id == id, cancellationToken);
+        => await dbContext.Hardwares.Include(h => h.Softwares).Include(h => h.ComplexHardware).FirstOrDefaultAsync(h => h.Id == id, cancellationToken);
 
     public async Task<Hardware> AddHardwareAsync(Hardware hardware, CancellationToken cancellationToken = default)
     {
