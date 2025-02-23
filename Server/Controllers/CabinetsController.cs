@@ -56,10 +56,10 @@ public class CabinetsController(CabinetService service, IMapper mapper) : MainCo
         return NoContent();
     }
 
-    [HttpDelete(Name = nameof(DeleteCabinet))]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCabinet(int id)
     {
         bool result = await service.DeleteCabinetAsync(id);
-        return result ? NoContent() : BadRequest();
+        return result ? Ok() : BadRequest();
     }
 }

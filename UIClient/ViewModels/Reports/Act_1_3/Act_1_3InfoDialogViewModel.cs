@@ -1,4 +1,5 @@
-﻿using DynamicData;
+﻿using Core.Models.Equipment;
+using DynamicData;
 using ReactiveUI;
 using ReportModel;
 using ReportModel.Акт_со_1._3;
@@ -21,6 +22,9 @@ public class Act_1_3InfoDialogViewModel : ViewModel
     public Act_1_3InfoDialogViewModel(MasterApiService apiService, MainWindowViewModel mainWindowViewModel)
         : base(apiService, mainWindowViewModel)
     {
+        ComplexesHardware = [];
+        _errorsPTS = [];
+
         CreateErrorsPTSCommand = ReactiveCommand.Create<ReportHardwareViewModel>(CreateErrorsPTS);
         RemoveErrorPTSCommand = ReactiveCommand.Create<ErrorPTS>(RemoveErrorPTS);
 
@@ -73,11 +77,13 @@ public class Act_1_3InfoDialogViewModel : ViewModel
     private async Task SelectComplexesHardwares()
     {
         var dialog = new SelectComplexesHardwareDialog();
-        var currentComplexesHardware = ComplexesHardware.Select(ch => ch.ComplexHardware).ToList();
+        var currentComplexesHardware = ComplexesHardware?.Select(ch => ch.ComplexHardware).ToList();
 
         dialog.DataContext = new SelectComplexesHardwareDialogViewModel(ApiService, currentComplexesHardware) { View = dialog };
 
-        var result = await dialog.ShowDialog<bool>(App.Owner);
+        await (dialog.DataContext as ViewModel)?.InitializeAsync();
+
+        bool result = await dialog.ShowDialog<bool>(App.Owner);
 
         if (!result)
             return;

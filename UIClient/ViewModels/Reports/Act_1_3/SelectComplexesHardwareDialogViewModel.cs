@@ -14,14 +14,14 @@ namespace UIClient.ViewModels.Reports.Act_1_3;
 public class SelectComplexesHardwareDialogViewModel : ViewModel
 {
     private ObservableCollection<SelectedComplexHardwareViewModel> _complexesHardware = [];
-    private List<ComplexHardwareObject> _earlySelectedComplexesHardware = [];
+    private List<ComplexHardwareObject> _earlySelectedComplexesHardware;
 
     public SelectComplexesHardwareDialogViewModel(MasterApiService apiService, List<ComplexHardwareObject> selectedComplexesHardware)
         : base(apiService)
     {
         AddComplexesHardwareCommand = ReactiveCommand.Create(AddComplexesHardware);
         CancelCommand = ReactiveCommand.Create(Cancel);
-        _earlySelectedComplexesHardware = selectedComplexesHardware;
+        _earlySelectedComplexesHardware = selectedComplexesHardware ?? [];
     }
 
     internal IView View { get; init; }

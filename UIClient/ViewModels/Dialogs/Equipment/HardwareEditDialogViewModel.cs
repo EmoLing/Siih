@@ -11,13 +11,14 @@ using UIClient.Views.Dialogs;
 using UIClient.Views.Dialogs.SelectDialog;
 
 namespace UIClient.ViewModels.Dialogs.Equipment;
+
 public class HardwareEditDialogViewModel : ViewModel
 {
     private readonly int _id;
     private string _name;
     private string _serialNumber;
     private string _article;
-    private DateOnly _dateCreate;
+    private DateTimeOffset _dateCreate;
     private ObservableCollection<SoftwareObject> _softwares = [];
     private SoftwareObject _selectedSoftware;
 
@@ -35,7 +36,7 @@ public class HardwareEditDialogViewModel : ViewModel
             Name = hardware.Name;
             SerialNumber = hardware.SerialNumber;
             Article = hardware.Article;
-            DateCreate = hardware.DateCreate;
+            DateCreate = new DateTimeOffset(hardware.DateCreate, default, default);
             Softwares = new ObservableCollection<SoftwareObject>(hardware.Softwares);
         }
     }
@@ -63,7 +64,7 @@ public class HardwareEditDialogViewModel : ViewModel
         set => this.RaiseAndSetIfChanged(ref _article, value);
     }
 
-    public DateOnly DateCreate
+    public DateTimeOffset DateCreate
     {
         get => _dateCreate;
         set => this.RaiseAndSetIfChanged(ref _dateCreate, value);
@@ -99,7 +100,8 @@ public class HardwareEditDialogViewModel : ViewModel
     private async Task AddSoftware()
     {
         var softwares = await ApiService.SoftwaresApiService.GetSoftwaresAsync();
-        var filteredSoftwares = softwares.Where(s => s.Hardwares.All(h => h.Id != _id)).Select(s => new SelectedItemViewModel() { TransferObject = s });
+        var filteredSoftwares = softwares.Where(s => s.Hardwares.All(h => h.Id != _id) && Softwares.All(st => st.Id != s.Id))
+            .Select(s => new SelectedItemViewModel() { TransferObject = s });
 
         var dialog = new SelectItemsTemplate();
         var selectDialogVM = new SelectItemsViewModel

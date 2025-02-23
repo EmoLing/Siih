@@ -56,10 +56,10 @@ public class HardwaresController(HardwareService service, IMapper mapper) : Main
         return NoContent();
     }
 
-    [HttpDelete(Name = nameof(DeleteHardware))]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteHardware(int id)
     {
         bool result = await service.DeleteHardwareAsync(id);
-        return result ? NoContent() : BadRequest();
+        return result ? Ok() : BadRequest();
     }
 }

@@ -56,10 +56,10 @@ public class ComplexesHardwareController(ComplexHardwareService service, IMapper
         return NoContent();
     }
 
-    [HttpDelete(Name = nameof(DeleteComplexHardware))]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteComplexHardware(int id)
     {
         bool result = await service.DeleteComplexHardwareAsync(id);
-        return result ? NoContent() : BadRequest();
+        return result ? Ok() : BadRequest();
     }
 }

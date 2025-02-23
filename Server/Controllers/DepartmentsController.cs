@@ -56,11 +56,11 @@ public class DepartmentsController(DepartmentService service, IMapper mapper) : 
         return NoContent();
     }
 
-    [HttpDelete(Name = nameof(DeleteDepartment))]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteDepartment(int id)
     {
         bool result = await service.DeleteDepartmentAsync(id);
-        return result ? NoContent() : BadRequest();
+        return result ? Ok() : BadRequest();
     }
 }
 

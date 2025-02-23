@@ -56,10 +56,10 @@ public class SoftwaresController(SoftwareService service, IMapper mapper) : Main
         return NoContent();
     }
 
-    [HttpDelete(Name = nameof(DeleteSoftware))]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteSoftware(int id)
     {
         bool result = await service.DeleteSoftwareAsync(id);
-        return result ? NoContent() : BadRequest();
+        return result ? Ok() : BadRequest();
     }
 }

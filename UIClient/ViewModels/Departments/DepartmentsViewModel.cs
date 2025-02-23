@@ -50,6 +50,7 @@ public class DepartmentsViewModel : ViewModel
     {
         var dialog = new DepartmentEditDialog();
         dialog.DataContext = new DepartmentEditDialogViewModel(ApiService, null) { View = dialog };
+        await (dialog.DataContext as ViewModel)?.InitializeAsync();
 
         var result = await dialog.ShowDialog<bool>(App.Owner);
 

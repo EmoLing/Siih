@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
@@ -67,7 +68,7 @@ public class HardwaresViewModel : ViewModel
             Name = dialogData.Name,
             SerialNumber = dialogData.SerialNumber,
             Article = dialogData.Article,
-            DateCreate = dialogData.DateCreate,
+            DateCreate = new DateOnly(dialogData.DateCreate.Year, dialogData.DateCreate.Month, dialogData.DateCreate.Day),
             Softwares = [.. dialogData.Softwares],
             ComplexHardware = SelectedHardware.ComplexHardware
         };
@@ -123,7 +124,7 @@ public class HardwaresViewModel : ViewModel
             Name = dialogData.Name,
             SerialNumber = dialogData.SerialNumber,
             Article = dialogData.Article,
-            DateCreate = dialogData.DateCreate,
+            DateCreate = new DateOnly(dialogData.DateCreate.Year, dialogData.DateCreate.Month, dialogData.DateCreate.Day),
             Softwares = [.. dialogData.Softwares],
             ComplexHardware = SelectedHardware.ComplexHardware
         };

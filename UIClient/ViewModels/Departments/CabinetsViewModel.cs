@@ -1,8 +1,12 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
+using Core.Models.Equipment;
+using DynamicData;
 using ReactiveUI;
 using Shared.DTOs.Departments;
+using Shared.DTOs.Equipment;
 using UIClient.Services;
 using UIClient.ViewModels.Dialogs.Departments;
 using UIClient.Views.Dialogs.Departments;
@@ -18,7 +22,7 @@ public class CabinetsViewModel : ViewModel
         : base(apiService, mainWindowViewModel)
     {
         AddCommand = ReactiveCommand.CreateFromTask(AddCabinet);
-        DeleteCommand = ReactiveCommand.Create(DeleteCabinet);
+        DeleteCommand = ReactiveCommand.CreateFromTask(DeleteCabinet);
         EditCommand = ReactiveCommand.CreateFromTask(EditCabinet);
 
         MainWindowViewModel.SetTitle("Кабинеты");
@@ -49,7 +53,7 @@ public class CabinetsViewModel : ViewModel
     private async Task AddCabinet()
     {
         var dialog = new CabinetEditDialog();
-        dialog.DataContext = new CabinetEditDialogViewModel(ApiService) { View = dialog };
+        dialog.DataContext = new CabinetEditDialogViewModel(ApiService, null) { View = dialog };
 
         var result = await dialog.ShowDialog<bool>(App.Owner);
 
@@ -79,13 +83,54 @@ public class CabinetsViewModel : ViewModel
         }
     }
 
-    private void DeleteCabinet()
+    private async Task DeleteCabinet()
     {
-        // Логика удаления пользователя
+        try
+        {
+            bool result = await ApiService.CabinetsApiService.DeleteCabinetAsync(SelectedCabinet.Id);
+
+            if (result)
+            {
+                Cabinets.Remove(SelectedCabinet);
+                SelectedCabinet = Cabinets.FirstOrDefault();
+            }
+        }
+        catch
+        {
+        }
     }
 
-    private Task EditCabinet()
+    private async Task EditCabinet()
     {
-        return Task.CompletedTask;
+        var dialog = new CabinetEditDialog();
+        dialog.DataContext = new CabinetEditDialogViewModel(ApiService, SelectedCabinet) { View = dialog };
+
+        var result = await dialog.ShowDialog<bool>(App.Owner);
+
+        if (!result)
+            return;
+
+        var dialogData = (dialog.DataContext as CabinetEditDialogViewModel);
+
+        var cabinet = new CabinetObject()
+        {
+            Id = SelectedCabinet.Id,
+            Guid = SelectedCabinet.Guid,
+            Name = dialogData.Name,
+            Department = dialogData.Department,
+        };
+
+        try
+        {
+            await ApiService.CabinetsApiService.UpdateCabinetAsync(cabinet);
+
+            Cabinets.Replace(SelectedCabinet, cabinet);
+            var changedCollection = Cabinets.ToList();
+            Cabinets = new ObservableCollection<CabinetObject>(changedCollection);
+            SelectedCabinet = cabinet;
+        }
+        catch
+        {
+        }
     }
 }

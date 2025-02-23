@@ -35,7 +35,7 @@
 				<Button Content="Удалить" Command="{Binding DeleteSoftwareCommand}" Width="100"
 						HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
 			</WrapPanel>
-			<ListBox ItemsSource="{Binding Softwares}" SelectionMode="Multiple" Height="200" />
+			<ListBox ItemsSource="{Binding Softwares}" SelectedItem="{Binding SelectedSoftware}" Height="200" />
 		</StackPanel>
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 20 0 0">
 			<Button Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"

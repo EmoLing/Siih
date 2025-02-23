@@ -56,10 +56,10 @@ public class JobTitlesController(JobTitleService service, IMapper mapper) : Main
         return NoContent();
     }
 
-    [HttpDelete(Name = nameof(DeleteJobTitle))]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteJobTitle(int id)
     {
         bool result = await service.DeleteJobTitleAsync(id);
-        return result ? NoContent() : BadRequest();
+        return result ? Ok() : BadRequest();
     }
 }
