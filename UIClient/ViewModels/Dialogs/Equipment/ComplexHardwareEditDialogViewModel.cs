@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reactive;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using DynamicData;
@@ -30,7 +29,7 @@ public class ComplexHardwareEditDialogViewModel : ViewModel
         CancelCommand = ReactiveCommand.Create(Cancel);
         AddHardwareCommand = ReactiveCommand.Create(AddHardware);
         CreateHardwareCommand = ReactiveCommand.Create(CreateHardware);
-        SelectUserCommand = ReactiveCommand.Create(SelectUser);
+        SelectUserCommand = ReactiveCommand.CreateFromTask(SelectUser);
 
         if (complexHardware is not null)
         {
@@ -91,6 +90,7 @@ public class ComplexHardwareEditDialogViewModel : ViewModel
     {
         var dialog = new SelectHardwaresDialog();
         dialog.DataContext = new SelectHardwaresDialogViewModel(ApiService, [.. Hardwares]) { View = dialog };
+        (dialog.DataContext as ViewModel)?.InitializeAsync();
 
         bool result = await dialog.ShowDialog<bool>(App.Owner);
 
@@ -113,13 +113,15 @@ public class ComplexHardwareEditDialogViewModel : ViewModel
             .Select(u => new SelectedItemViewModel() { TransferObject = u }).ToList();
 
         var selectDialog = new SelectItemsTemplate();
-        var selectDialogVM = new SelectItemsViewModel
+        var selectDialogVM = new SelectUserDialogViewModel(ApiService, false)
         {
             Items = new ObservableCollection<SelectedItemViewModel>(filteredUsers),
             View = selectDialog,
-            SupportCheckBoxSelected = false,
+            Caption = "Выбор пользователя",
+            Title = "Выберите доступного пользователя"
         };
 
+        selectDialog.DataGrid.Columns.AddRange(selectDialogVM.Columns);
         selectDialog.DataContext = selectDialogVM;
 
         bool result = await selectDialog.ShowDialog<bool>(App.Owner);

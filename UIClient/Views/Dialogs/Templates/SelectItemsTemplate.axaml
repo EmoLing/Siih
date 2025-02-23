@@ -5,10 +5,8 @@
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="400"
              x:Class="UIClient.Views.Dialogs.SelectDialog.SelectItemsTemplate"
 			 xmlns:vm="using:UIClient.ViewModels.Dialogs.SelectDialog"
-			 x:DataType="vm:SelectItemsViewModel">
-	<Window.DataContext>
-		<vm:SelectItemsViewModel />
-	</Window.DataContext>
+			 x:DataType="vm:SelectItemsViewModel"
+			 Title="{Binding Caption}">
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto"/>
@@ -19,19 +17,10 @@
 			<Button Content="Отмена" Command="{Binding CancelCommand}"  />
 		</StackPanel>
 		<StackPanel Grid.Row="1" Margin="10">
-			<TextBlock Text="Доступное оборудование:" />
-			<ListBox ItemsSource="{Binding Items}" Focusable="True" SelectedItem="{Binding FocusedObject}" Height="300">
-				<ListBox.ItemTemplate>
-					<DataTemplate>
-						<StackPanel>
-							<CheckBox IsVisible="{Binding RelativeSource={RelativeSource AncestorType=Window},
-									  Path=((vm:SelectItemsViewModel)DataContext).SupportCheckBoxSelected}"
-									  IsChecked="{Binding IsSelected}" />
-							<TextBlock Text="{Binding TransferObject.Name}" />
-						</StackPanel>
-					</DataTemplate>
-				</ListBox.ItemTemplate>
-			</ListBox>
+			<TextBlock Text="{Binding Title}" />
+			<DataGrid x:Name="TemplateDataGrid" ItemsSource="{Binding Items}" Focusable="True"
+					  SelectedItem="{Binding FocusedObject}" Height="300">
+			</DataGrid>
 		</StackPanel>
 	</Grid>
 </Window>

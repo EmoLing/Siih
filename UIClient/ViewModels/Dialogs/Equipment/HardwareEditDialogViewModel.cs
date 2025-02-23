@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using DynamicData;
 using ReactiveUI;
 using Shared.DTOs.Equipment;
 using UIClient.Services;
@@ -100,17 +101,23 @@ public class HardwareEditDialogViewModel : ViewModel
     private async Task AddSoftware()
     {
         var softwares = await ApiService.SoftwaresApiService.GetSoftwaresAsync();
+
         var filteredSoftwares = softwares.Where(s => s.Hardwares.All(h => h.Id != _id) && Softwares.All(st => st.Id != s.Id))
-            .Select(s => new SelectedItemViewModel() { TransferObject = s });
+            .Select(s => new SelectedItemViewModel() { TransferObject = s }).ToList();
 
         var dialog = new SelectItemsTemplate();
-        var selectDialogVM = new SelectItemsViewModel
+        var selectDialogVM = new SelectItemsViewModel(ApiService, true)
         {
             Items = new ObservableCollection<SelectedItemViewModel>(filteredSoftwares),
             View = dialog,
+            Caption = "Выбор ПО",
+            Title = "Выберите доступное ПО"
         };
 
         dialog.DataContext = selectDialogVM;
+        dialog.DataGrid.Columns.AddRange(selectDialogVM.Columns);
+
+        await (dialog.DataContext as ViewModel)?.InitializeAsync();
 
         bool result = await dialog.ShowDialog<bool>(App.Owner);
 

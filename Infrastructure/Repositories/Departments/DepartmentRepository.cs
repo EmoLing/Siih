@@ -52,6 +52,20 @@ internal class DepartmentRepository(ApplicationDBContext dbContext) : IDepartmen
 
     public async Task<Department> UpdateDepartmentAsync(Department department, CancellationToken cancellationToken = default)
     {
+        if (department.Cabinets.Count > 0)
+        {
+            var existingCabinets = await dbContext.Cabinets.Where(c => department.Cabinets.Contains(c)).ToListAsync(cancellationToken);
+            var newExistingCabinets = department.Cabinets.Where(c => !existingCabinets.Contains(c));
+
+            department.Cabinets.Clear();
+
+            if (newExistingCabinets.Any())
+                await dbContext.Cabinets.AddRangeAsync(newExistingCabinets, cancellationToken);
+
+            if (existingCabinets.Count > 0)
+                department.Cabinets.AddRange(existingCabinets);
+        }
+
         dbContext.Departments.Update(department);
         await dbContext.SaveChangesAsync(cancellationToken);
 

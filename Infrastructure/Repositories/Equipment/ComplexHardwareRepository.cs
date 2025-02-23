@@ -60,6 +60,30 @@ internal class ComplexHardwareRepository(ApplicationDBContext dbContext) : IComp
 
     public async Task<ComplexHardware> UpdateComplexHardwareAsync(ComplexHardware complexHardware, CancellationToken cancellationToken = default)
     {
+        if (complexHardware.User is not null)
+        {
+            var existingUser = await dbContext.Users.FirstOrDefaultAsync(ch => ch.Id == complexHardware.User.Id, cancellationToken);
+
+            if (existingUser is null)
+                dbContext.Users.Add(complexHardware.User);
+            else
+                complexHardware.User = existingUser;
+        }
+
+        if (complexHardware.Hardwares.Count > 0)
+        {
+            var existingHardwares = await dbContext.Hardwares.Where(h => complexHardware.Hardwares.Contains(h)).ToListAsync(cancellationToken);
+            var newExistingHardwares = complexHardware.Hardwares.Where(h => !existingHardwares.Contains(h));
+
+            complexHardware.Hardwares.Clear();
+
+            if (newExistingHardwares.Any())
+                await dbContext.Hardwares.AddRangeAsync(newExistingHardwares, cancellationToken);
+
+            if (existingHardwares.Count != 0)
+                complexHardware.Hardwares.AddRange(existingHardwares);
+        }
+
         dbContext.ComplexesHardware.Update(complexHardware);
         await dbContext.SaveChangesAsync(cancellationToken);
 

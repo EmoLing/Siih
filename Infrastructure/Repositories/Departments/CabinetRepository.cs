@@ -48,6 +48,16 @@ internal class CabinetRepository(ApplicationDBContext dbContext) : ICabinetRepos
 
     public async Task<Cabinet> UpdateCabinetAsync(Cabinet cabinet, CancellationToken cancellationToken = default)
     {
+        if (cabinet.Department is not null)
+        {
+            var existingDepartment = await dbContext.Departments.FindAsync([cabinet.Department.Id], cancellationToken);
+
+            if (existingDepartment is null)
+                await dbContext.Departments.AddAsync(cabinet.Department, cancellationToken);
+            else
+                cabinet.Department = existingDepartment;
+        }
+
         dbContext.Cabinets.Update(cabinet);
         await dbContext.SaveChangesAsync(cancellationToken);
 

@@ -14,6 +14,30 @@ internal class HardwareRepository(ApplicationDBContext dbContext) : IHardwareRep
 
     public async Task<Hardware> AddHardwareAsync(Hardware hardware, CancellationToken cancellationToken = default)
     {
+        if (hardware.ComplexHardware is not null)
+        {
+            var existingComplexHardware = await dbContext.ComplexesHardware.FirstOrDefaultAsync(ch => ch.Id == hardware.ComplexHardware.Id, cancellationToken);
+
+            if (existingComplexHardware is null)
+                dbContext.ComplexesHardware.Add(hardware.ComplexHardware);
+            else
+                hardware.ComplexHardware = existingComplexHardware;
+        }
+
+        if (hardware.Softwares.Count > 0)
+        {
+            var existingSoftwares = await dbContext.Softwares.Where(s => hardware.Softwares.Contains(s)).ToListAsync(cancellationToken);
+            var newExistingSoftwares = hardware.Softwares.Where(s => !existingSoftwares.Contains(s));
+
+            hardware.Softwares.Clear();
+
+            if (newExistingSoftwares.Any())
+                await dbContext.Softwares.AddRangeAsync(newExistingSoftwares, cancellationToken);
+
+            if (existingSoftwares.Count != 0)
+                hardware.Softwares.AddRange(existingSoftwares);
+        }
+
         await dbContext.Hardwares.AddAsync(hardware, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
 
@@ -35,6 +59,30 @@ internal class HardwareRepository(ApplicationDBContext dbContext) : IHardwareRep
 
     public async Task<Hardware> UpdateHardwareAsync(Hardware hardware, CancellationToken cancellationToken = default)
     {
+        if (hardware.ComplexHardware is not null)
+        {
+            var existingComplexHardware = await dbContext.ComplexesHardware.FirstOrDefaultAsync(ch => ch.Id == hardware.ComplexHardware.Id, cancellationToken);
+
+            if (existingComplexHardware is null)
+                dbContext.ComplexesHardware.Add(hardware.ComplexHardware);
+            else
+                hardware.ComplexHardware = existingComplexHardware;
+        }
+
+        if (hardware.Softwares.Count > 0)
+        {
+            var existingSoftwares = await dbContext.Softwares.Where(s => hardware.Softwares.Contains(s)).ToListAsync(cancellationToken);
+            var newExistingSoftwares = hardware.Softwares.Where(s => !existingSoftwares.Contains(s));
+
+            hardware.Softwares.Clear();
+
+            if (newExistingSoftwares.Any())
+                await dbContext.Softwares.AddRangeAsync(newExistingSoftwares, cancellationToken);
+
+            if (existingSoftwares.Count != 0)
+                hardware.Softwares.AddRange(existingSoftwares);
+        }
+
         dbContext.Hardwares.Update(hardware);
         await dbContext.SaveChangesAsync(cancellationToken);
 

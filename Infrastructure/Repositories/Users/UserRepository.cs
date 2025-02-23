@@ -57,6 +57,26 @@ public class UserRepository(ApplicationDBContext dbContext) : IUserRepository
 
     public async Task<User> UpdateUserAsync(User user, CancellationToken cancellationToken = default)
     {
+        if (user.JobTitle is not null)
+        {
+            var existingJobTitle = await dbContext.JobTitles.FirstOrDefaultAsync(jt => jt.Id == user.JobTitle.Id, cancellationToken);
+
+            if (existingJobTitle is null)
+                dbContext.JobTitles.Add(user.JobTitle);
+            else
+                user.JobTitle = existingJobTitle;
+        }
+
+        if (user.Cabinet is not null)
+        {
+            var existingCabinet = await dbContext.Cabinets.FirstOrDefaultAsync(c => c.Id == user.Cabinet.Id, cancellationToken);
+
+            if (existingCabinet is null)
+                dbContext.Cabinets.Add(user.Cabinet);
+            else
+                user.Cabinet = existingCabinet;
+        }
+
         dbContext.Users.Update(user);
         await dbContext.SaveChangesAsync(cancellationToken);
 
