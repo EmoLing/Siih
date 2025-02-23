@@ -3,6 +3,8 @@ using DynamicData;
 using ReactiveUI;
 using ReportModel;
 using ReportModel.Акт_со_1._3;
+using Shared.DTOs.Equipment;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
@@ -28,7 +30,7 @@ public class Act_1_3InfoDialogViewModel : ViewModel
         CreateErrorsPTSCommand = ReactiveCommand.Create<ReportHardwareViewModel>(CreateErrorsPTS);
         RemoveErrorPTSCommand = ReactiveCommand.Create<ErrorPTS>(RemoveErrorPTS);
 
-        GenerateReportCommand = ReactiveCommand.Create(GenerateReport);
+        GenerateReportCommand = ReactiveCommand.CreateFromTask(GenerateReport);
         SelectComplexesHardwaresCommand = ReactiveCommand.Create(SelectComplexesHardwares);
         RemoveComplexesHardwaresCommand = ReactiveCommand.Create<ReportHardwareViewModel>(RemoveComplexesHardwares);
 
@@ -98,10 +100,18 @@ public class Act_1_3InfoDialogViewModel : ViewModel
 
     }
 
-    private void GenerateReport()
+    private async Task GenerateReport()
     {
         var complexes = ComplexesHardware.Select(ch => ch.ComplexHardware).ToList();
-        var reportInfo = new Act_1_3Info(complexes, ErrorsPTS.ToList());
+        var reloadedLists = new List<ComplexHardwareObject>(complexes.Count);
+
+        foreach (var complex in complexes)
+        {
+            var reloadedComplex = await ApiService.ComplexesHardwareApiService.GetComplexHardwareAsync(complex.Id);
+            reloadedLists.Add(reloadedComplex);
+        }
+
+        var reportInfo = new Act_1_3Info(reloadedLists, ErrorsPTS.ToList());
         reportInfo.Initialize();
 
         ReportGenerator.ReportGenerator.Start(reportInfo, Title);
