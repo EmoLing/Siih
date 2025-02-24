@@ -8,7 +8,7 @@ public class UserRepository(ApplicationDBContext dbContext) : IUserRepository
 {
     public async Task<IEnumerable<User>> GetAllUsersAsync(CancellationToken cancellationToken = default) => await dbContext.Users
         .Include(u => u.JobTitle)
-        .Include(u => u.Cabinet)
+        .Include(u => u.Cabinet).ThenInclude(c => c.Department)
         .Include(u => u.ComplexHardwares).ToListAsync(cancellationToken);
 
     public async Task<User> GetUserByIdAsync(int id, CancellationToken cancellationToken = default)

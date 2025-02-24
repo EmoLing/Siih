@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
-using Core.Models.Equipment;
 using DynamicData;
 using ReactiveUI;
 using Shared.DTOs.Equipment;
@@ -14,8 +13,10 @@ using UIClient.Views.Dialogs.Equipment;
 namespace UIClient.ViewModels.Equipment;
 public class HardwaresViewModel : ViewModel
 {
+    private ObservableCollection<HardwareObject> _allHardwares;
     private ObservableCollection<HardwareObject> _hardwares = [];
     private HardwareObject _selectedHardware;
+    private string _filterText;
 
     public HardwaresViewModel(MasterApiService apiService, MainWindowViewModel mainWindowViewModel)
         : base(apiService, mainWindowViewModel)
@@ -39,6 +40,17 @@ public class HardwaresViewModel : ViewModel
         set => this.RaiseAndSetIfChanged(ref _selectedHardware, value);
     }
 
+    public string FilterText
+    {
+        get => _filterText;
+        set
+        {
+            _filterText = value;
+            this.RaisePropertyChanged(nameof(FilterText));
+            FilterData();
+        }
+    }
+
     public ReactiveCommand<Unit, Unit> AddCommand { get; }
     public ReactiveCommand<Unit, Unit> DeleteCommand { get; }
     public ReactiveCommand<Unit, Unit> EditCommand { get; }
@@ -46,7 +58,21 @@ public class HardwaresViewModel : ViewModel
     protected override async Task LoadDataAsync()
     {
         var hardwares = await ApiService.HardwaresApiService.GetHardwaresAsync();
+        _allHardwares = new ObservableCollection<HardwareObject>(hardwares);
         Hardwares = new ObservableCollection<HardwareObject>(hardwares);
+    }
+
+    private void FilterData()
+    {
+        if (String.IsNullOrEmpty(FilterText))
+        {
+            Hardwares = _allHardwares;
+        }
+        else
+        {
+            var filtered = _allHardwares.Where(h => h.ComplexHardware?.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase) is true).ToList();
+            Hardwares = new ObservableCollection<HardwareObject>(filtered);
+        }
     }
 
     private async Task AddHardware()
@@ -80,6 +106,7 @@ public class HardwaresViewModel : ViewModel
             if (createdhardware is not null)
             {
                 Hardwares.Add(createdhardware);
+                _allHardwares.Add(hardware);
                 SelectedHardware = createdhardware;
             }
         }
@@ -97,6 +124,7 @@ public class HardwaresViewModel : ViewModel
             if (result)
             {
                 Hardwares.Remove(SelectedHardware);
+                _allHardwares.Remove(SelectedHardware);
                 SelectedHardware = Hardwares.FirstOrDefault();
             }
         }
@@ -134,6 +162,7 @@ public class HardwaresViewModel : ViewModel
             await ApiService.HardwaresApiService.UpdateHardwareAsync(hardware);
 
             Hardwares.Replace(SelectedHardware, hardware);
+            _allHardwares.Replace(SelectedHardware, hardware);
             var changedCollection = Hardwares.ToList();
             Hardwares = new ObservableCollection<HardwareObject>(changedCollection);
             SelectedHardware = hardware;

@@ -21,6 +21,10 @@
 			<Button ToolTip.Tip="Удалить" Background="White" Command="{Binding DeleteUserCommand}" Margin="0 0 0 5">
 				<Image Width="24" Height="24" Source="/Assets/delete.png" />
 			</Button>
+			<TextBox Margin="20 0 20 0" HorizontalAlignment="Stretch"
+					 Width="200" Height="24"
+					 Text="{Binding FilterText, Mode=TwoWay}"
+					 Watermark="Введите отдел" />
 		</StackPanel>
 		<ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
 			<DataGrid ItemsSource="{Binding Users, Mode=TwoWay}" SelectedItem="{Binding SelectedUser}" IsReadOnly="True"
@@ -49,6 +53,7 @@
 					<DataGridTextColumn Header="Отчество" Binding="{Binding Surname}" Width="*"/>
 					<DataGridTextColumn Header="Должность" Binding="{Binding JobTitle.Name}" Width="*" />
 					<DataGridTextColumn Header="Кабинет" Binding="{Binding Cabinet.Name}" Width="*"/>
+					<DataGridTextColumn Header="Отдел" Binding="{Binding Cabinet.Department.Name}" Width="*"/>
 				</DataGrid.Columns>
 			</DataGrid>
 		</ScrollViewer>

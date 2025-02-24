@@ -1,9 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
 using Avalonia.Threading;
-using Core.Models.Users;
 using DynamicData;
 using ReactiveUI;
 using Shared.DTOs.Users;
@@ -15,8 +15,10 @@ namespace UIClient.ViewModels;
 
 public class UsersViewModel : ViewModel
 {
+    private ObservableCollection<UserObject> _allUsers;
     private ObservableCollection<UserObject> _users;
     private UserObject _selectedUser;
+    private string _filterText;
 
     public UsersViewModel(MasterApiService apiService, MainWindowViewModel mainWindowViewModel)
     : base(apiService, mainWindowViewModel)
@@ -42,6 +44,17 @@ public class UsersViewModel : ViewModel
         set => this.RaiseAndSetIfChanged(ref _selectedUser, value);
     }
 
+    public string FilterText
+    {
+        get => _filterText;
+        set
+        {
+            _filterText = value;
+            this.RaisePropertyChanged(nameof(FilterText));
+            FilterData();
+        }
+    }
+
     public ReactiveCommand<Unit, Unit> AddUserCommand { get; }
     public ReactiveCommand<Unit, Unit> DeleteUserCommand { get; }
     public ReactiveCommand<Unit, Unit> EditUserCommand { get; }
@@ -49,7 +62,21 @@ public class UsersViewModel : ViewModel
     protected override async Task LoadDataAsync()
     {
         var users = await ApiService.UsersApiService.GetUsersAsync();
+        _allUsers = new ObservableCollection<UserObject>(users);
         await Dispatcher.UIThread.InvokeAsync(() => users.ForEach(u => Users.Add(u)));
+    }
+
+    private void FilterData()
+    {
+        if (String.IsNullOrEmpty(FilterText))
+        {
+            Users = _allUsers;
+        }
+        else
+        {
+            var filtered = _users.Where(u => u.Cabinet?.Department?.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase) is true).ToList();
+            Users = new ObservableCollection<UserObject>(filtered);
+        }
     }
 
     private async Task AddUser()
@@ -82,6 +109,7 @@ public class UsersViewModel : ViewModel
 
             if (createdUser is not null)
             {
+                _allUsers.Add(createdUser);
                 Users.Add(createdUser);
                 SelectedUser = createdUser;
             }
@@ -99,6 +127,7 @@ public class UsersViewModel : ViewModel
 
             if (result)
             {
+                _allUsers.Remove(SelectedUser);
                 Users.Remove(SelectedUser);
                 SelectedUser = Users.FirstOrDefault();
             }
@@ -151,6 +180,8 @@ public class UsersViewModel : ViewModel
         try
         {
             await ApiService.UsersApiService.UpdateUserAsync(editUser);
+
+            _allUsers.Replace(SelectedUser, editUser);
             Users.Replace(SelectedUser, editUser);
             SelectedUser = editUser;
         }

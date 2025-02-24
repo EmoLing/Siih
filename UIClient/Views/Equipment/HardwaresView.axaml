@@ -21,6 +21,9 @@
 			<Button ToolTip.Tip="Удалить" Background="White" Command="{Binding DeleteCommand}" Margin="0 0 0 5">
 				<Image Width="24" Height="24" Source="/Assets/delete.png" />
 			</Button>
+			<TextBox Margin="20 0 20 0" HorizontalAlignment="Stretch" Height="24"
+					 Text="{Binding FilterText, Mode=TwoWay}"
+					 Watermark="Введите наименование комплекса" />
 		</StackPanel>
 		<ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
 			<DataGrid ItemsSource="{Binding Hardwares}" IsReadOnly="True"
