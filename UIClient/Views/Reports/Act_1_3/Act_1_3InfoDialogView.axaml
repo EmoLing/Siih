@@ -40,7 +40,7 @@
 										<DataTemplate x:DataType="vm:ReportHardwareViewModel">
 											<StackPanel Orientation="Horizontal">
 												<TextBlock Text="{Binding Hardware.Name}" VerticalAlignment="Center" Margin="0,0,10,0" />
-												<Button Content="Create"
+												<Button Content="Добавить описания"
 														Command="{Binding ((vm:Act_1_3InfoDialogViewModel)DataContext).CreateErrorsPTSCommand, ElementName=CurrentWindow}"
 														CommandParameter="{Binding}" IsEnabled="{Binding !IsInErrorPTS}"
 														/>
@@ -58,8 +58,8 @@
 		<DataGrid Grid.Row="3" ItemsSource="{Binding ErrorsPTS}" x:DataType="vm:Act_1_3InfoDialogViewModel">
 			<DataGrid.Columns>
 				<DataGridTextColumn Header="Наименование" Binding="{Binding Hardware.Name}" IsReadOnly="True"/>
-				<DataGridTextColumn Header="IncomingInspection" Binding="{Binding IncomingInspection}" />
-				<DataGridTextColumn Header="FunctioningInspection" Binding="{Binding FunctioningInspection}" />
+				<DataGridTextColumn Header="Результаты входного контроля" Binding="{Binding IncomingInspection}" />
+				<DataGridTextColumn Header="Результаты контроля функционирования " Binding="{Binding FunctioningInspection}" />
 				<DataGridTemplateColumn Header="">
 					<DataGridTemplateColumn.CellTemplate>
 						<DataTemplate>
