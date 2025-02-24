@@ -37,17 +37,6 @@ public static class ReportGenerator
                 continue;
 
             int startRowIndex = tableInfo.StartIndexRow;
-            //var mergeRows = new List<MergeRows>();
-            //var mergedRowInfos = tableInfo.RowsInfo.Where(ri => ri.IsStartMerge || ri.IsEndMerge).ToList();
-
-            //for (int i = 0; i < mergedRowInfos.Count; i += 2)
-            //{
-            //    mergeRows.Add(new MergeRows()
-            //    {
-            //        PairStart = (null, mergedRowInfos[i]),
-            //        PairEnd = (null, mergedRowInfos[i + 1])
-            //    });
-            //}
 
             (XWPFTableRow row, RowInfo rowInfo) startRow = (null, null);
             foreach (var rowInfo in tableInfo.RowsInfo)
@@ -78,23 +67,6 @@ public static class ReportGenerator
 
                 startRowIndex++;
             }
-
-            //StartMergeRows(mergeRows);
-        }
-    }
-
-    private static void StartMergeRows(List<MergeRows> mergeRows)
-    {
-        if (mergeRows.Count == 0)
-            return;
-
-        foreach (var mergeRow in mergeRows)
-        {
-            int numberStart = mergeRow.PairEnd.rowInfo.Number;
-            int numberEnd = mergeRow.PairEnd.rowInfo.Number;
-            int dif = numberEnd - numberStart;
-
-            mergeRow.PairStart.row.MergeCells(0, dif);
         }
     }
 
