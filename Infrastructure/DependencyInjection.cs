@@ -15,7 +15,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString)
     {
         services.AddDbContext<ApplicationDBContext>(o
-            => o.UseNpgsql(connectionString).LogTo(Console.WriteLine, LogLevel.Warning));
+            => o.UseNpgsql(connectionString).LogTo(Console.WriteLine, LogLevel.Warning).EnableServiceProviderCaching());
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IJobTitleRepository, JobTitleRepository>();

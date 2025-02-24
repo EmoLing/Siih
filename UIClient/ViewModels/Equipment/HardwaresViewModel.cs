@@ -132,12 +132,11 @@ public class HardwaresViewModel : ViewModel
         try
         {
             await ApiService.HardwaresApiService.UpdateHardwareAsync(hardware);
-            var updatedHardware = await ApiService.HardwaresApiService.GetHardwareAsync(hardware.Id);
 
-            Hardwares.Replace(SelectedHardware, updatedHardware);
+            Hardwares.Replace(SelectedHardware, hardware);
             var changedCollection = Hardwares.ToList();
             Hardwares = new ObservableCollection<HardwareObject>(changedCollection);
-            SelectedHardware = updatedHardware;
+            SelectedHardware = hardware;
         }
         catch
         {

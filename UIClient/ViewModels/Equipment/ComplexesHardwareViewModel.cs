@@ -128,12 +128,11 @@ public class ComplexesHardwareViewModel : ViewModel
         try
         {
             await ApiService.ComplexesHardwareApiService.UpdateComplexHardwareAsync(complexHardware);
-            var updatedComplex = await ApiService.ComplexesHardwareApiService.GetComplexHardwareAsync(complexHardware.Id);
 
-            ComplexesHardware.Replace(SelectedComplexHardware, updatedComplex);
+            ComplexesHardware.Replace(SelectedComplexHardware, complexHardware);
             var changedCollection = ComplexesHardware.ToList();
             ComplexesHardware = new ObservableCollection<ComplexHardwareObject>(changedCollection);
-            SelectedComplexHardware = updatedComplex;
+            SelectedComplexHardware = complexHardware;
         }
         catch
         {

@@ -59,6 +59,14 @@ internal class HardwareRepository(ApplicationDBContext dbContext) : IHardwareRep
 
     public async Task<Hardware> UpdateHardwareAsync(Hardware hardware, CancellationToken cancellationToken = default)
     {
+        var existingHardware = await dbContext.Hardwares
+            .Include(h => h.Softwares)
+            .Include(h => h.ComplexHardware)
+            .FirstAsync(h => h.Id == hardware.Id, cancellationToken);
+
+        var entity = dbContext.Attach(existingHardware);
+        entity.CurrentValues.SetValues(hardware);
+
         if (hardware.ComplexHardware is not null)
         {
             var existingComplexHardware = await dbContext.ComplexesHardware.FirstOrDefaultAsync(ch => ch.Id == hardware.ComplexHardware.Id, cancellationToken);
@@ -66,24 +74,21 @@ internal class HardwareRepository(ApplicationDBContext dbContext) : IHardwareRep
             if (existingComplexHardware is null)
                 dbContext.ComplexesHardware.Add(hardware.ComplexHardware);
             else
-                hardware.ComplexHardware = existingComplexHardware;
+                entity.Entity.ComplexHardware = existingComplexHardware;
         }
 
-        if (hardware.Softwares.Count > 0)
+        foreach (var software in existingHardware.Softwares.ToList())
         {
-            var existingSoftwares = await dbContext.Softwares.Where(s => hardware.Softwares.Contains(s)).ToListAsync(cancellationToken);
-            var newExistingSoftwares = hardware.Softwares.Where(s => !existingSoftwares.Contains(s));
-
-            hardware.Softwares.Clear();
-
-            if (newExistingSoftwares.Any())
-                await dbContext.Softwares.AddRangeAsync(newExistingSoftwares, cancellationToken);
-
-            if (existingSoftwares.Count != 0)
-                hardware.Softwares.AddRange(existingSoftwares);
+            if (!hardware.Softwares.Contains(software))
+                existingHardware.Softwares.Remove(software);
         }
 
-        dbContext.Hardwares.Update(hardware);
+        foreach (var software in hardware.Softwares)
+        {
+            if (!existingHardware.Softwares.Contains(software))
+                existingHardware.Softwares.Add(software);
+        }
+
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return hardware;
