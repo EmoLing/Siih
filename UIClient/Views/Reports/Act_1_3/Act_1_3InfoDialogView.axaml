@@ -7,42 +7,55 @@
 			 xmlns:model="using:DB.Models.Equipment"
 			 xmlns:reportmodel="using:ReportModel.Акт_со_1._3"
 			 x:Class="UIClient.Views.Reports.Act_1_3.Act_1_3InfoDialogView"
-			 x:DataType="vm:Act_1_3InfoDialogViewModel">
-	<StackPanel Margin="10">
-		<StackPanel Orientation="Horizontal">
+			 x:DataType="vm:Act_1_3InfoDialogViewModel"
+			 x:Name="CurrentWindow">
+	<Grid Margin="10">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="50" />
+			<RowDefinition Height="50" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<StackPanel Grid.Row="0" Orientation="Horizontal">
 			<Button Content="Сгенерировать отчет" Command="{Binding GenerateReportCommand }" />
 		</StackPanel>
-		<TextBlock Text="Наименование"/>
-		<TextBox Text="{Binding Title}" />
-		<StackPanel Orientation="Horizontal">
-			<Button Content="Добавить комплекс" Command="{Binding SelectComplexesHardwaresCommand}" />
-			<Button Content="Удалить комплекс" Command="{Binding RemoveComplexesHardwaresCommand}" />
+		<StackPanel Grid.Row="1">
+			<TextBlock Text="Наименование"/>
+			<TextBox Text="{Binding Title}" />
 		</StackPanel>
-		<ListBox ItemsSource="{Binding ComplexesHardware}" >
-			<ListBox.ItemTemplate>
-				<DataTemplate x:DataType="vm:ReportComplexHardwareViewModel">
-					<Expander Header="{Binding ComplexHardware.Name}">
-						<StackPanel>
-							<ListBox ItemsSource="{Binding Hardwares}">
-								<ListBox.ItemTemplate>
-									<DataTemplate x:DataType="vm:ReportHardwareViewModel">
-										<StackPanel Orientation="Horizontal">
-											<TextBlock Text="{Binding Hardware.Name}" VerticalAlignment="Center" Margin="0,0,10,0" />
-											<Button Content="Create"
-													Command="{Binding ((vm:Act_1_3InfoDialogViewModel)DataContext).CreateErrorsPTSCommand,
-														RelativeSource={RelativeSource AncestorType=Window}}"
-													CommandParameter="{Binding}"
-													IsEnabled="{Binding !IsInErrorPTS}" />
-										</StackPanel>
-									</DataTemplate>
-								</ListBox.ItemTemplate>
-							</ListBox>
-						</StackPanel>
-					</Expander>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
-		<DataGrid ItemsSource="{Binding ErrorsPTS}" x:DataType="vm:Act_1_3InfoDialogViewModel">
+		<StackPanel Grid.Row="2" Margin="0 20 0 20">
+			<StackPanel Orientation="Horizontal">
+				<Button Content="Добавить комплекс" Command="{Binding SelectComplexesHardwaresCommand}" />
+				<Button Content="Удалить комплекс" Command="{Binding RemoveComplexesHardwaresCommand}"
+						IsEnabled="{Binding IsEnableSelectedReportComplexHardware}" />
+			</StackPanel>
+			<ListBox ItemsSource="{Binding ComplexesHardware}"
+					 SelectedItem="{Binding SelectedReportComplexHardware}" >
+				<ListBox.ItemTemplate>
+					<DataTemplate x:DataType="vm:ReportComplexHardwareViewModel">
+						<Expander Header="{Binding ComplexHardware.Name}">
+							<StackPanel>
+								<ListBox ItemsSource="{Binding Hardwares}">
+									<ListBox.ItemTemplate>
+										<DataTemplate x:DataType="vm:ReportHardwareViewModel">
+											<StackPanel Orientation="Horizontal">
+												<TextBlock Text="{Binding Hardware.Name}" VerticalAlignment="Center" Margin="0,0,10,0" />
+												<Button Content="Create"
+														Command="{Binding ((vm:Act_1_3InfoDialogViewModel)DataContext).CreateErrorsPTSCommand, ElementName=CurrentWindow}"
+														CommandParameter="{Binding}" IsEnabled="{Binding !IsInErrorPTS}"
+														/>
+												<!--IsEnabled="{Binding !IsInErrorPTS}"-->
+											</StackPanel>
+										</DataTemplate>
+									</ListBox.ItemTemplate>
+								</ListBox>
+							</StackPanel>
+						</Expander>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</StackPanel>
+		<DataGrid Grid.Row="3" ItemsSource="{Binding ErrorsPTS}" x:DataType="vm:Act_1_3InfoDialogViewModel">
 			<DataGrid.Columns>
 				<DataGridTextColumn Header="Наименование" Binding="{Binding Hardware.Name}" IsReadOnly="True"/>
 				<DataGridTextColumn Header="IncomingInspection" Binding="{Binding IncomingInspection}" />
@@ -59,5 +72,5 @@
 				</DataGridTemplateColumn>
 			</DataGrid.Columns>
 		</DataGrid>
-	</StackPanel>
+	</Grid>
 </UserControl>

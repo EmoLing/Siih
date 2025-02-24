@@ -11,6 +11,5 @@ public partial class Act_1_3InfoDialogView : UserControl
     public Act_1_3InfoDialogView()
     {
         InitializeComponent();
-        DataContext = ((App)Application.Current).Services.GetRequiredService<Act_1_3InfoDialogViewModel>();
     }
 }

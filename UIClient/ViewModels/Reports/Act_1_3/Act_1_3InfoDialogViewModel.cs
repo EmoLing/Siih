@@ -18,7 +18,8 @@ namespace UIClient.ViewModels.Reports.Act_1_3;
 public class Act_1_3InfoDialogViewModel : ViewModel
 {
     private ObservableCollection<ReportComplexHardwareViewModel> _complexesHardware;
-
+    private ReportComplexHardwareViewModel _selectedReportComplexHardware;
+    private bool _isEnableSelectedReportComplexHardware;
     private ObservableCollection<ErrorPTS> _errorsPTS;
 
     public Act_1_3InfoDialogViewModel(MasterApiService apiService, MainWindowViewModel mainWindowViewModel)
@@ -32,7 +33,7 @@ public class Act_1_3InfoDialogViewModel : ViewModel
 
         GenerateReportCommand = ReactiveCommand.CreateFromTask(GenerateReport);
         SelectComplexesHardwaresCommand = ReactiveCommand.Create(SelectComplexesHardwares);
-        RemoveComplexesHardwaresCommand = ReactiveCommand.Create<ReportHardwareViewModel>(RemoveComplexesHardwares);
+        RemoveComplexesHardwaresCommand = ReactiveCommand.Create(RemoveComplexesHardwares);
 
         MainWindowViewModel.SetTitle("Отчеты");
     }
@@ -40,7 +41,7 @@ public class Act_1_3InfoDialogViewModel : ViewModel
     public ICommand GenerateReportCommand { get; }
 
     public ICommand SelectComplexesHardwaresCommand { get; }
-    public ReactiveCommand<ReportHardwareViewModel, Unit> RemoveComplexesHardwaresCommand { get; }
+    public ReactiveCommand<Unit, Unit> RemoveComplexesHardwaresCommand { get; }
 
     public ReactiveCommand<ReportHardwareViewModel, Unit> CreateErrorsPTSCommand { get; }
     public ReactiveCommand<ErrorPTS, Unit> RemoveErrorPTSCommand { get; }
@@ -51,6 +52,22 @@ public class Act_1_3InfoDialogViewModel : ViewModel
     {
         get => _complexesHardware;
         set => this.RaiseAndSetIfChanged(ref _complexesHardware, value);
+    }
+
+    public ReportComplexHardwareViewModel SelectedReportComplexHardware
+    {
+        get => _selectedReportComplexHardware;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedReportComplexHardware, value);
+            IsEnableSelectedReportComplexHardware = value is not null;
+        }
+    }
+
+    public bool IsEnableSelectedReportComplexHardware
+    {
+        get => _isEnableSelectedReportComplexHardware;
+        set => this.RaiseAndSetIfChanged(ref _isEnableSelectedReportComplexHardware, value);
     }
 
     public ObservableCollection<ErrorPTS> ErrorsPTS
@@ -68,12 +85,16 @@ public class Act_1_3InfoDialogViewModel : ViewModel
 
     private void CreateErrorsPTS(ReportHardwareViewModel subItem)
     {
-        // Логика создания объекта
+        ErrorsPTS.Add(new ErrorPTS() { Hardware = subItem.Hardware });
+        subItem.IsInErrorPTS = true;
     }
 
     private void RemoveErrorPTS(ErrorPTS subItem)
     {
-        // Логика создания объекта
+        var reportComplex = ComplexesHardware.FirstOrDefault(ch => ch.Hardwares.Any(h => h.Hardware.Id == subItem.Hardware.Id));
+        ErrorsPTS.Remove(subItem);
+        var reportHardware = reportComplex.Hardwares.FirstOrDefault(h => h.Hardware.Id == subItem.Hardware.Id);
+        reportHardware.IsInErrorPTS = false;
     }
 
     private async Task SelectComplexesHardwares()
@@ -95,9 +116,15 @@ public class Act_1_3InfoDialogViewModel : ViewModel
         ComplexesHardware.AddRange(dataContext.SelectedComplexesHardware.Select(ch => new ReportComplexHardwareViewModel(ch)));
     }
 
-    private void RemoveComplexesHardwares(ReportHardwareViewModel subItem)
+    private void RemoveComplexesHardwares()
     {
+        var removedErrorPTS = ErrorsPTS.Where(e => SelectedReportComplexHardware.Hardwares.Any(h => h.Hardware.Id == e.Hardware.Id));
+        ComplexesHardware.Remove(SelectedReportComplexHardware);
 
+        foreach (var error in removedErrorPTS)
+            ErrorsPTS.Remove(error);
+
+        SelectedReportComplexHardware = ComplexesHardware.FirstOrDefault();
     }
 
     private async Task GenerateReport()

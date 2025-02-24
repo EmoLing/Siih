@@ -6,7 +6,7 @@ public class ErrorPTS
 {
     public HardwareObject Hardware { get; set; }
 
-    public string IncomingInspection { get; set; }
+    public string IncomingInspection { get; set; } = String.Empty;
 
-    public string FunctioningInspection { get; set; }
+    public string FunctioningInspection { get; set; } = String.Empty;
 }

@@ -1,4 +1,3 @@
-using Infrastructure;
 using IoC;
 
 var builder = WebApplication.CreateBuilder(args);
